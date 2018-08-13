@@ -47,8 +47,7 @@ CREATE TABLE dishes (
   price             INT       NOT NULL,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX dishes_unique_person_date_idx
-  ON dishes (restaurant_id, date);
+CREATE UNIQUE INDEX dishes_unique_person_date_name_idx ON dishes (restaurant_id, date, name);
 
 CREATE TABLE votes (
   id                INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),

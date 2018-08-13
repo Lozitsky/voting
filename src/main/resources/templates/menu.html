@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+</head>
+<body>
+
+<div th:each="dish : ${dishes}">
+
+    <h2 data-th-text="${dish.name}"></h2>
+
+</div>
+
+</body>
+</html>

@@ -1,13 +1,15 @@
 package com.kirilo.restaurant.voting.controller;
 
+import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
-import com.kirilo.restaurant.voting.repository.RestaurantRepo;
-import com.kirilo.restaurant.voting.repository.UserRepo;
+import com.kirilo.restaurant.voting.service.RestaurantService;
+import com.kirilo.restaurant.voting.service.UserService;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,58 +21,50 @@ public class VotingController {
     public final Logger logger = Logger.getLogger(VotingController.class);
 
     @Autowired
-    RestaurantRepo restaurantRepo;
+    RestaurantService restaurantService;
+
     @Autowired
-    UserRepo userRepo;
+    UserService userService;
 
-    @RequestMapping("/")
-    public String goToVote() {
-        logger.info("Returning vote.html file");
-        return "vote.html";
-    }
 
-    @RequestMapping("/doLogin")
-    public String doLogin(@RequestParam String name, Model model, HttpSession session) {
-        logger.info("getting user from database");
-
-        User user = userRepo.findByName(name);
-
-        logger.info("putting user into session");
-
-        session.setAttribute("user", user);
-
-        if (!user.isVoted()) {
-            logger.info("putting restaurants into model");
-            List<Restaurant> restaurants = restaurantRepo.findAll();
-            model.addAttribute("restaurants", restaurants);
-
-            return "/performVote.html";
-        } else {
-            return "/alreadyVoted.html";
-        }
-    }
 
     @RequestMapping("/voteFor")
     public String voteFor(@RequestParam int id, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (!user.isVoted()) {
             user.setVoted(true);
-            userRepo.save(user);
-            Restaurant restaurant= restaurantRepo.findById(id);
+            userService.update(user);
+            Restaurant restaurant = restaurantService.get(id);
             logger.info("voting for restaurant " + restaurant.getName());
             restaurant.setNumberOfVotes(restaurant.getNumberOfVotes() + 1);
-            restaurantRepo.save(restaurant);
+            restaurantService.update(restaurant);
             return "voted.html";
         }
 
         return "/alreadyVoted.html";
     }
 
+    @RequestMapping("/menuFrom")
+    public String menuFrom(@RequestParam int id, Model model) {
+        Restaurant restaurant = restaurantService.getWithDishes(id);
+        List<Dish> dishes = restaurant.getDishes();
+        model.addAttribute("dishes", dishes);
+        return "/menu";
+    }
+
+    @GetMapping("/restaurants")
+    public String goToRestaurants(Model model) {
+        logger.info("Returning allRestaurants.html file");
+        List<Restaurant> restaurants = restaurantService.getAll();
+        model.addAttribute("restaurants", restaurants);
+        return "/allRestaurants.html";
+    }
+
     @RequestMapping("/result")
     public String result(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user.isVoted()) {
-            List<Restaurant> restaurants = restaurantRepo.findAll();
+            List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);
 
             return "/result.html";
