@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>performVote</title>
+</head>
+<body>
+
+<!--/*@thymesVar id="restaurants" type="List<com.kirilo.votingsystem.entity.Restaurant>"*/-->
+<div th:each="restaurant : ${restaurants}">
+Click to vote for:
+<a th:href="@{/voteFor(id=${restaurant.id})}" th:text="${restaurant.name}"></a>
+
+</div>
+
+</body>
+</html>

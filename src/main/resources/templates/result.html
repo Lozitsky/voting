@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tolat votes</title>
+</head>
+<body>
+
+<div th:each="restaurant : ${restaurants}">
+    <h2 data-th-text="'Total votes for: ' + ${restaurant.name} + ' are ' + ${restaurant.numberOfVotes}"></h2>
+    <!--<h6 data-th-text="${restaurant.numberOfVotes}"></h6>-->
+    <!--<h6 th:text="${restaurant.name}" th:text="${restaurant.votes}"></h6>-->
+</div>
+
+</body>
+</html>
