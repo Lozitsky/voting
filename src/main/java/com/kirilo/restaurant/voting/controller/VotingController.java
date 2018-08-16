@@ -44,22 +44,6 @@ public class VotingController {
         return "/alreadyVoted.html";
     }
 
-    @RequestMapping("/menuFrom")
-    public String menuFrom(@RequestParam int id, Model model) {
-        Restaurant restaurant = restaurantService.getWithDishes(id);
-        List<Dish> dishes = restaurant.getDishes();
-        model.addAttribute("dishes", dishes);
-        return "/menu";
-    }
-
-    @GetMapping("/restaurants")
-    public String goToRestaurants(Model model) {
-        logger.info("Returning allRestaurants.html file");
-        List<Restaurant> restaurants = restaurantService.getAll();
-        model.addAttribute("restaurants", restaurants);
-        return "/allRestaurants.html";
-    }
-
     @RequestMapping("/result")
     public String result(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -71,4 +55,9 @@ public class VotingController {
         }
         return "/performVote.html";
     }
+
+/*    @RequestMapping("/dishForm")
+    public String addDish() {
+        return "dish";
+    }*/
 }

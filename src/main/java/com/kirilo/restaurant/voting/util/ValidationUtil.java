@@ -1,5 +1,6 @@
 package com.kirilo.restaurant.voting.util;
 
+import com.kirilo.restaurant.voting.model.AbstractEntity;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
 public class ValidationUtil {
@@ -19,6 +20,15 @@ public class ValidationUtil {
     public static void checkNotFound(boolean found, String msg) {
         if (!found) {
             throw new NotFoundException("Not found entity with " + msg);
+        }
+    }
+
+    public static void assureIdConsistent(AbstractEntity entity, int id) {
+//      http://stackoverflow.com/a/32728226/548473
+        if (entity.isNew()) {
+            entity.setId(id);
+        } else if (entity.getId() != id) {
+            throw new IllegalArgumentException(entity + " must be with id=" + id);
         }
     }
 }

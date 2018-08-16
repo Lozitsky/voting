@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Menu from all restaurants</title>
@@ -9,6 +9,10 @@
 <div th:each="restaurant : ${restaurants}">
     click for showing the menu:
     <a th:href="@{/menuFrom(id=${restaurant.id})}" th:text="${restaurant.name}"></a>
+</div>
+
+<div>
+    <a href="/restaurants/restaurantForm" th:text="#{restaurant.Add}"></a>
 </div>
 
 </body>

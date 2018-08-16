@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Restaurants</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<section>
+    <form action="#" th:action="@{/restaurants/save}" method="post">
+        <!--<input type="hidden" name="id" th:field="${restaurant.id}">-->
+        <input th:type="hidden" name="id" th:value="${restaurant.id}">
+        <dl>
+            <dt th:text="#{entity.Name}">:</dt>
+            <!--<dd><input type="text" th:field="*{name}"></dd>-->
+            <dd><input th:type="text" th:value="${restaurant.name}" size="40" name="name"></dd>
+        </dl>
+        <button type="submit" th:text="#{common.save}"></button>
+        <button onclick="window.history.back()" type="button" th:text="#{common.cancel}"></button>
+    </form>
+</section>
+
+</body>
+</html>

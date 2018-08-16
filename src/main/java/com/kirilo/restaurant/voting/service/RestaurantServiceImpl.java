@@ -22,8 +22,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant create(Restaurant user) {
-        return null;
+    public Restaurant create(Restaurant restaurant) {
+        Assert.notNull(restaurant, "restaurant must not be null");
+        return repository.save(restaurant);
     }
 
     @Override

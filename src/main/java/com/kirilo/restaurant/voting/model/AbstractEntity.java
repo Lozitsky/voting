@@ -1,5 +1,7 @@
 package com.kirilo.restaurant.voting.model;
 
+import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.Objects;
 @MappedSuperclass
 // http://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
 @Access(AccessType.FIELD)
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Persistable<Integer> {
     public static final int START_SEQ = 10000;
 
     @Id
@@ -46,6 +48,11 @@ public abstract class AbstractEntity {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.id == null;
     }
 
     @Override
