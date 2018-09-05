@@ -1,5 +1,7 @@
 package com.kirilo.restaurant.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,6 +11,9 @@ public class Restaurant extends AbstractNamedEntity {
     @Column(name = "votes")
     private int numberOfVotes;
 
+//https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
+//https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
     protected List<Dish> dishes;
