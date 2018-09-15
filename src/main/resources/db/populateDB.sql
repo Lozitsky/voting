@@ -8,15 +8,15 @@ ALTER SEQUENCE global_seq RESTART WITH 10000;
 
 INSERT INTO persons (name, email, password, has_voted) VALUES
   ('User', 'user@yandex.ru', 'password', FALSE ),
-  ('Admin', 'admin@gmail.com', 'admin', TRUE ),
+  ('Admin', 'admin@gmail.com', 'password', TRUE ),
   ('User2', 'user2@yandex.ru', 'password', FALSE ),
   ('User3', 'user3@yandex.ru', 'password', FALSE );
 
 INSERT INTO person_roles (role, person_id) VALUES
-  ('USER', 10000),
-  ('ADMIN', 10001),
-  ('USER', 10002),
-  ('USER', 10003);
+  ('ROLE_USER', 10000),
+  ('ROLE_ADMIN', 10001),
+  ('ROLE_USER', 10002),
+  ('ROLE_USER', 10003);
 
 INSERT INTO restaurants (name, votes) VALUES
   ('Ararat', 0),

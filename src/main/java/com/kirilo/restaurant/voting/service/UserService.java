@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.service;
 
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 

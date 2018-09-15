@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithName;
 
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
     private final UserRepository repo;
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) throws NotFoundException {
-        return null;
+        return repo.getByEmail(email.toLowerCase());
     }
 
     @Override
@@ -56,4 +56,13 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll() {
         return null;
     }
+/*
+    @Override
+    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = getByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + email + " is not found");
+        }
+        return new AuthorizedUser(user);
+    }*/
 }

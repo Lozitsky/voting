@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
-@MappedSuperclass
 // http://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
+@MappedSuperclass
 @Access(AccessType.FIELD)
 public abstract class AbstractEntity implements Persistable<Integer> {
     public static final int START_SEQ = 10000;
