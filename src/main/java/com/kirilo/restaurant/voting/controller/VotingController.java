@@ -2,8 +2,11 @@ package com.kirilo.restaurant.voting.controller;
 
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
+import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.UserService;
+import com.kirilo.restaurant.voting.service.VotingService;
+import com.kirilo.restaurant.voting.service.VotingServiceImpl;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +27,8 @@ public class VotingController {
     @Autowired
     UserService userService;
 
-
+    @Autowired
+    VotingService votingService;
 
     @RequestMapping("/voteFor")
     public String voteFor(@RequestParam int id, HttpSession session) {
@@ -32,10 +36,15 @@ public class VotingController {
         if (!user.isVoted()) {
             user.setVoted(true);
             userService.update(user);
-            Restaurant restaurant = restaurantService.get(id);
-            logger.info("voting for restaurant " + restaurant.getName());
-            restaurant.setNumberOfVotes(restaurant.getNumberOfVotes() + 1);
-            restaurantService.update(restaurant);
+//            Restaurant restaurant = restaurantService.get(id);
+            Vote vote = votingService.get(id);
+
+//            logger.info("voting for restaurant " + restaurant.getName());
+
+//            restaurant.setNumberOfVotes(restaurant.getNumberOfVotes() + 1);
+            vote.setNumberOfVotes(vote.getNumberOfVotes() + 1);
+//            restaurantService.update(restaurant);
+            votingService.update(vote);
             return "voted.html";
         }
 

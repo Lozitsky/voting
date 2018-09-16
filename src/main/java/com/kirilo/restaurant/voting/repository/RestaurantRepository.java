@@ -4,9 +4,11 @@ import com.kirilo.restaurant.voting.model.Restaurant;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
+@Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
     Restaurant findById(int id);
 

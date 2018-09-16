@@ -18,22 +18,31 @@ INSERT INTO person_roles (role, person_id) VALUES
   ('ROLE_USER', 10002),
   ('ROLE_USER', 10003);
 
-INSERT INTO restaurants (name, votes) VALUES
-  ('Ararat', 0),
-  ('U Vano', 0),
-  ('Белый Лебедь', 0),
-  ('Черная Каракатица', 0),
-  ('Последний причал', 0),
-  ('Файна страва', 0),
-  ('For Kings', 0);
+INSERT INTO restaurants (name, description) VALUES
+  ('Ararat', 'some description'),
+  ('U Vano', 'some description'),
+  ('Белый Лебедь', 'some description'),
+  ('Черная Каракатица', 'some description'),
+  ('Последний причал', 'some description'),
+  ('Файна страва', ''),
+  ('For Kings', 'some description');
 
-INSERT INTO dishes (date, name, price, restaurant_id)VALUES
-       ('2018-07-30 10:00:00', 'Завтрак', 500, 10004),
-       ('2018-07-30 13:00:00', 'Обед', 1000, 10004),
-       ('2018-07-30 20:00:00', 'Ужин', 500, 10005),
-       ('2018-07-31 10:00:00', 'Завтрак', 500, 10005),
-       ('2018-07-31 13:00:00', 'Обед', 1000, 10006),
-       ('2018-07-31 20:00:00', 'Ужин', 510, 10006),
-       ('2018-07-01 14:00:00', 'Super ланч', 510, 10005),
-       ('2018-07-01 21:00:00', 'Super ужин', 1500, 10005);
+INSERT INTO votes (restaurant_id) VALUES
+  (10004),
+  (10005),
+  (10006),
+  (10007),
+  (10008),
+  (10009),
+  (10010);
+
+INSERT INTO dishes (name, price, restaurant_id)VALUES
+       ('Завтрак', 500, 10004),
+       ('Обед', 1000, 10004),
+       ('Ужин', 500, 10005),
+       ('Завтрак', 500, 10005),
+       ('Обед', 1000, 10006),
+       ('Ужин', 510, 10006),
+       ('Super ланч', 510, 10005),
+       ('Super ужин', 1500, 10005);
 
