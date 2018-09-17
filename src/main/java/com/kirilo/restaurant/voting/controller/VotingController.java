@@ -4,9 +4,8 @@ import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.RestaurantService;
-import com.kirilo.restaurant.voting.service.UserService;
 import com.kirilo.restaurant.voting.service.VotingService;
-import com.kirilo.restaurant.voting.service.VotingServiceImpl;
+import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
 
 @Controller
 public class VotingController {
@@ -25,26 +28,40 @@ public class VotingController {
     RestaurantService restaurantService;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     VotingService votingService;
 
     @RequestMapping("/voteFor")
     public String voteFor(@RequestParam int id, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (!user.isVoted()) {
-            user.setVoted(true);
-            userService.update(user);
-//            Restaurant restaurant = restaurantService.get(id);
+
+        LocalDate lastDate = user.getLastVoting().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+
+        logger.info("Last voting: " + lastDate);
+        logger.info("Local Date Now: " + now);
+        logger.info("Now is after last voting? " + now.isAfter(lastDate));
+
+        if (canVote(user, lastDate, now)) {
+
+            if (now.equals(lastDate)) {
+                logger.info("it is before 11:00 we assume that user changed his mind");
+                Vote vote = votingService.get(user.getLastId());
+                if (vote != null)
+                    vote.setNumberOfVotes(vote.getNumberOfVotes() - 1);
+            }
+
+            logger.info("Voting for restaurant with id: " + id);
             Vote vote = votingService.get(id);
-
-//            logger.info("voting for restaurant " + restaurant.getName());
-
-//            restaurant.setNumberOfVotes(restaurant.getNumberOfVotes() + 1);
+            if (vote == null) {
+                throw new NotFoundException("Empty menu today");
+            }
             vote.setNumberOfVotes(vote.getNumberOfVotes() + 1);
-//            restaurantService.update(restaurant);
-            votingService.update(vote);
+
+            user.setLastId(id);
+            user.setLastVoting(java.sql.Date.valueOf(now));
+
+            votingService.update(vote, user);
+
             return "voted.html";
         }
 
@@ -54,7 +71,7 @@ public class VotingController {
     @RequestMapping("/result")
     public String result(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (user.isVoted()) {
+        if (canVote(user)) {
             List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);
 

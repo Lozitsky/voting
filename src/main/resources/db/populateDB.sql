@@ -6,11 +6,11 @@ DELETE FROM restaurants;
 
 ALTER SEQUENCE global_seq RESTART WITH 10000;
 
-INSERT INTO persons (name, email, password, has_voted) VALUES
-  ('User', 'user@yandex.ru', 'password', FALSE ),
-  ('Admin', 'admin@gmail.com', 'password', TRUE ),
-  ('User2', 'user2@yandex.ru', 'password', FALSE ),
-  ('User3', 'user3@yandex.ru', 'password', FALSE );
+INSERT INTO persons (name, email, password, last_voting, last_id) VALUES
+  ('User', 'user@yandex.ru', 'password', '2018-09-15', 111),
+  ('Admin', 'admin@gmail.com', 'password', '2018-09-14', 111),
+  ('User2', 'user2@yandex.ru', 'password', '2018-09-13', 111),
+  ('User3', 'user3@yandex.ru', 'password', '2018-09-12', 111);
 
 INSERT INTO person_roles (role, person_id) VALUES
   ('ROLE_USER', 10000),

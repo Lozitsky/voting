@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,8 +12,14 @@ import java.util.Set;
 public class User extends Person {
 //    private static final long serialVersionUID = 1L;
 
-    @Column(name = "has_voted")
-    private boolean voted;
+/*    @Column(name = "has_voted")
+    private boolean voted;*/
+
+    @Column(name = "last_voting")
+    private Date lastVoting;
+
+    @Column(name = "last_id")
+    private int lastId;
 
     public User() {
     }
@@ -23,13 +28,27 @@ public class User extends Person {
         super(id, name, email, password, enabled, registered, roles);
     }
 
-    public boolean isVoted() {
+/*    public boolean isVoted() {
         return voted;
     }
 
     public void setVoted(boolean voted) {
         this.voted = voted;
+    }*/
+
+    public Date getLastVoting() {
+        return lastVoting;
     }
 
+    public void setLastVoting(Date lastVoting) {
+        this.lastVoting = lastVoting;
+    }
 
+    public int getLastId() {
+        return lastId;
+    }
+
+    public void setLastId(int lastId) {
+        this.lastId = lastId;
+    }
 }

@@ -16,8 +16,10 @@ CREATE TABLE persons
   email            VARCHAR                 NOT NULL,
   password         VARCHAR                 NOT NULL,
   date             TIMESTAMP DEFAULT now() NOT NULL,
-  enabled          BOOL DEFAULT TRUE       NOT NULL,
-  has_voted        BOOL DEFAULT TRUE       NOT NULL
+  last_id          INT                     NOT NULL,
+  last_voting      date                    NOT NULL,
+  enabled          BOOL DEFAULT TRUE       NOT NULL
+--   has_voted        BOOL DEFAULT TRUE       NOT NULL
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON persons (email);
 

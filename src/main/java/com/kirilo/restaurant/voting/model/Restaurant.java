@@ -8,8 +8,6 @@ import java.util.List;
 @Entity
 @Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = "name", name = "restaurants_unique_name_idx")})
 public class Restaurant extends AbstractNamedEntity {
-    /*@Column(name = "votes")
-    private int numberOfVotes;*/
 
 //https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
 //https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
@@ -20,14 +18,6 @@ public class Restaurant extends AbstractNamedEntity {
 
     @Column(name = "description", columnDefinition = "VARCHAR(200)")
     private String description;
-
-    /*public int getNumberOfVotes() {
-        return numberOfVotes;
-    }
-
-    public void setNumberOfVotes(int numberOfVotes) {
-        this.numberOfVotes = numberOfVotes;
-    }*/
 
     public Restaurant() {
     }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
+
 @Controller
 public class RootController {
     public final Logger logger = Logger.getLogger(RootController.class);
@@ -42,7 +44,7 @@ public class RootController {
 
         session.setAttribute("user", user);
 
-        if (!user.isVoted()) {
+        if (canVote(user)) {
             logger.info("putting restaurants into model");
             List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);
