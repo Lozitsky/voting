@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.controller;
 
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
+import com.kirilo.restaurant.voting.security.SecurityUtil;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.UserService;
 import org.jboss.logging.Logger;
@@ -37,8 +38,7 @@ public class RootController {
     public String doLogin(@RequestParam String name, Model model, HttpSession session) {
         logger.info("getting user from database");
 
-        User user = userService.findByName(name);
-        SecurityUtil.setAuthorisedId(user.getId());
+        User user = SecurityUtil.getUser();
 
         logger.info("putting user into session");
 

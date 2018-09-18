@@ -27,14 +27,14 @@ INSERT INTO restaurants (name, description) VALUES
   ('Файна страва', ''),
   ('For Kings', 'some description');
 
-INSERT INTO votes (restaurant_id) VALUES
-  (10004),
-  (10005),
-  (10006),
-  (10007),
-  (10008),
-  (10009),
-  (10010);
+INSERT INTO votes (restaurant_id, date) VALUES
+  (10004, '2018-09-18'),
+  (10005, '2018-09-18'),
+  (10006, '2018-09-18'),
+  (10007, '2018-09-18'),
+  (10008, '2018-09-18'),
+  (10009, '2018-09-18'),
+  (10010, '2018-09-18');
 
 INSERT INTO dishes (name, price, restaurant_id)VALUES
        ('Завтрак', 500, 10004),

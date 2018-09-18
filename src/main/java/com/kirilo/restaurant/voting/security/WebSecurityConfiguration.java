@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -27,9 +26,9 @@ public class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdap
         return username -> {
             com.kirilo.restaurant.voting.model.User user = service.getByEmail(username);
             if (user != null) {
-                return new User(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true,
-                        user.getRoles()
-                );
+//                return new User(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true,
+//                        user.getRoles());
+                return new AuthorizedUser(user);
             } else {
                 throw new UsernameNotFoundException("could not find the user '"
                         + username + "'");

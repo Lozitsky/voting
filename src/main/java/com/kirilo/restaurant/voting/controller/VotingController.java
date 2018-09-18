@@ -5,6 +5,7 @@ import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.VotingService;
+import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
@@ -32,9 +32,11 @@ public class VotingController {
 
     @RequestMapping("/voteFor")
     public String voteFor(@RequestParam int id, HttpSession session) {
-        User user = (User) session.getAttribute("user");
 
-        LocalDate lastDate = user.getLastVoting().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        User user = (User) session.getAttribute("user");
+//        User user = SecurityUtil.getUser();
+
+        LocalDate lastDate = ValidationDateTime.getLastDate(user);
         LocalDate now = LocalDate.now();
 
         logger.info("Last voting: " + lastDate);
