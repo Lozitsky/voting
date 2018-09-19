@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -31,11 +30,13 @@ public class RootController {
     @GetMapping("/")
     public String goToVote() {
         logger.info("Returning vote.html file");
-        return "vote.html";
+//        return "vote.html";
+        return "redirect:/doLogin";
     }
 
     @RequestMapping("/doLogin")
-    public String doLogin(@RequestParam String name, Model model, HttpSession session) {
+//    public String doLogin(@RequestParam String name, Model model, HttpSession session) {
+    public String doLogin(Model model, HttpSession session) {
         logger.info("getting user from database");
 
         User user = SecurityUtil.getUser();

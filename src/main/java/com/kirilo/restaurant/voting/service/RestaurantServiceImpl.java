@@ -57,4 +57,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant getWithDishes(int id) {
         return checkNotFoundWithId(repository.getWithDishes(id), id);
     }
+
+    @Override
+    public Restaurant getWithVotes(int id) {
+        return checkNotFoundWithId(repository.getWithVotes(id), id);
+    }
 }

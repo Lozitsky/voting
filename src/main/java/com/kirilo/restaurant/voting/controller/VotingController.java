@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.alreadyVoted;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
 
 @Controller
@@ -73,7 +74,7 @@ public class VotingController {
     @RequestMapping("/result")
     public String result(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (canVote(user)) {
+        if (alreadyVoted(user)) {
             List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);
 
@@ -81,9 +82,4 @@ public class VotingController {
         }
         return "/performVote.html";
     }
-
-/*    @RequestMapping("/dishForm")
-    public String addDish() {
-        return "dish";
-    }*/
 }

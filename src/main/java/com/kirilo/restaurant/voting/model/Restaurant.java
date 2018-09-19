@@ -16,6 +16,11 @@ public class Restaurant extends AbstractNamedEntity {
     @OrderBy("date DESC")
     protected List<Dish> dishes;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OrderBy("date DESC")
+    protected List<Vote> votes;
+
     @Column(name = "description", columnDefinition = "VARCHAR(200)")
     private String description;
 
@@ -32,6 +37,10 @@ public class Restaurant extends AbstractNamedEntity {
 
     public List<Dish> getDishes() {
         return dishes;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
     }
 
     public String getDescription() {
