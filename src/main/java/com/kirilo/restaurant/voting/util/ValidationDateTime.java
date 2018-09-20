@@ -3,8 +3,13 @@ package com.kirilo.restaurant.voting.util;
 import com.kirilo.restaurant.voting.model.User;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Locale;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 
@@ -27,7 +32,6 @@ public class ValidationDateTime {
     public static boolean alreadyVoted(User user) {
         if (user == null) {
             alreadyVoted(getUser());
-//            return false;
         }
         LocalDate now = LocalDate.now();
         return now.equals(getLastDate(user));
@@ -37,7 +41,36 @@ public class ValidationDateTime {
         return new java.sql.Date(user.getLastVoting().getTime()).toLocalDate();
     }
 
+    public static java.util.Date convertToDate(LocalDateTime date){
+        return java.util.Date
+                .from(date.atZone(ZoneId.systemDefault())
+                        .toInstant());
+    }
+
+    public static Date convertToDate(LocalDate date){
+        return java.sql.Date.valueOf(date);
+    }
+
+    public static java.util.Date convertToDate(String dateInString) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+
+//        String dateInString = "7-01-2018";
+        return formatter.parse(dateInString);
+    }
+
+    public static LocalDateTime convertToLocalDateTime(LocalDate date, LocalTime time) {
+        return LocalDateTime.of(date, time);
+    }
+
     public static Date getDateToday() {
-        return java.sql.Date.valueOf(LocalDate.now());
+        return convertToDate(LocalDate.now());
+    }
+
+    public static LocalDate getLocalDate(String stringDate) {
+        return LocalDate.parse(stringDate);
+    }
+
+    public static LocalTime getLocalTime(String stringTime) {
+        return LocalTime.parse(stringTime);
     }
 }

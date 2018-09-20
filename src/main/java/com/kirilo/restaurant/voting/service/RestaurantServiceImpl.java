@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.*;
 import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithId;
 import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithName;
 
@@ -54,12 +57,37 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getWithDishes(int id) {
+    public List<Restaurant> getWithDishes(int id) {
+//        return repository.getWithDishes(id);
         return checkNotFoundWithId(repository.getWithDishes(id), id);
     }
 
     @Override
-    public Restaurant getWithVotes(int id) {
+    public List<Restaurant> getWithDishes(String stringDate) {
+        LocalDateTime startLocalDateTime = convertToLocalDateTime(getLocalDate(stringDate), getLocalTime("00:00:00"));
+        LocalDateTime endLocalDateTime = convertToLocalDateTime(getLocalDate(stringDate), getLocalTime("23:59:59"));
+//        return repository.getWithDishes(startLocalDateTime, endLocalDateTime);
+//        return repository.getWithDishes(convertToDate(getLocalDate(stringDate)), convertToDate(getLocalDate(stringDate)));
+        return repository.getWithDishes(convertToDate(startLocalDateTime), convertToDate(endLocalDateTime));
+    }
+
+    @Override
+    public List<Restaurant> getWithDishes() {
+        return repository.getWithDishes();
+    }
+
+    @Override
+    public Restaurant getWithDishes(int id, Date date) {
+        return repository.getWithDishes(id, date);
+    }
+
+    @Override
+    public List<Restaurant> getWithVotes() {
+        return repository.getWithVotes();
+    }
+
+    @Override
+    public List<Restaurant> getWithVotes(int id) {
         return checkNotFoundWithId(repository.getWithVotes(id), id);
     }
 }

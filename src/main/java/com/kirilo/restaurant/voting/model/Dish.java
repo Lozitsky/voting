@@ -7,14 +7,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+//https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+
 @Entity
 @Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date", "name"}, name = "dishes_unique_restaurant_date_name_idx")})
-public class Dish extends AbstractNamedEntity{
+public class Dish extends AbstractNamedEntity {
     @Column(name = "price", columnDefinition = "int default 0")
     private int price;
 
+    //    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+//  @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Restaurant restaurant;

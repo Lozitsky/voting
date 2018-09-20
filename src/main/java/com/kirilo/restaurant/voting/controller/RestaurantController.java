@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.getDateToday;
 import static com.kirilo.restaurant.voting.util.ValidationUtil.assureIdConsistent;
 
 @Controller
@@ -24,7 +25,7 @@ public class RestaurantController {
 
         @RequestMapping("/menuFrom")
         public String menuFrom(@RequestParam int id, Model model) {
-            Restaurant restaurant = restaurantService.getWithDishes(id);
+            Restaurant restaurant = restaurantService.getWithDishes(id, getDateToday());
             List<Dish> dishes = restaurant.getDishes();
             model.addAttribute("dishes", dishes);
             return "/menu";

@@ -3,9 +3,11 @@ package com.kirilo.restaurant.voting.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+//https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+
 @Entity
 @Table(name = "votes", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date", "votes"}, name = "votes_unique_restaurant_date_votes_idx")})
-public class Vote extends AbstractEntity{
+public class Vote extends AbstractEntity {
     @Column(name = "votes")
     private int numberOfVotes;
 
@@ -33,6 +35,4 @@ public class Vote extends AbstractEntity{
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
-
-
 }

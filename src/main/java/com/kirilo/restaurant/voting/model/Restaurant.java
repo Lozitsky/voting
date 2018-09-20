@@ -1,6 +1,6 @@
 package com.kirilo.restaurant.voting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,17 +9,15 @@ import java.util.List;
 @Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = "name", name = "restaurants_unique_name_idx")})
 public class Restaurant extends AbstractNamedEntity {
 
-//https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue
-//https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
-    protected List<Dish> dishes;
+    @JsonIgnoreProperties("restaurant")
+    private List<Dish> dishes;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
-    protected List<Vote> votes;
+    @JsonIgnoreProperties("restaurant")
+    private List<Vote> votes;
 
     @Column(name = "description", columnDefinition = "VARCHAR(200)")
     private String description;
@@ -39,10 +37,6 @@ public class Restaurant extends AbstractNamedEntity {
         return dishes;
     }
 
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -50,5 +44,10 @@ public class Restaurant extends AbstractNamedEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
 }
 

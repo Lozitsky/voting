@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.alreadyVoted;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.getDateToday;
 
+//http://qaru.site/questions/37305/avoid-jackson-serialization-on-non-fetched-lazy-objects
 @RestController
 @RequestMapping(RestaurantControl.REST_URL)
 //@PreAuthorize("hasRole('ADMIN')")
@@ -43,24 +45,58 @@ public class RestaurantControl {
     @Autowired
     VotingService votingService;
 
-    //    @Secured("ROLE_ADMIN")
     @GetMapping("/restaurants")
-    public List<Restaurant> goToRestaurants() {
-        List<Restaurant> all = restaurantService.getAll();
-        logger.info("Returning all restaurants: " + all.toString());
-        return all;
+    public List<Restaurant> getAll() {
+        List<Restaurant> restaurants = restaurantService.getAll();
+        logger.info("Returning restaurants restaurants: " + restaurants.toString());
+        return restaurants;
     }
 
-    @GetMapping("/dishes")
-    public List<Dish> restaurantsWithDishes(){
+    @GetMapping("/restaurant/{id}")
+    public Restaurant goToRestaurant(@PathVariable int id) {
+        Restaurant restaurant = restaurantService.get(id);
+        logger.info("Returning restaurant: " + restaurant.toString());
+        return restaurant;
+    }
+
+    @GetMapping("/restaurants/dishes")
+    public List<Restaurant> getWithDishes(){
+        List<Restaurant> restaurants = restaurantService.getWithDishes();
+        logger.info("Returning all restaurants with dishes: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/restaurants/votes")
+    public List<Restaurant> getWithVotes(){
+        List<Restaurant> restaurants = restaurantService.getWithVotes();
+        logger.info("Returning all restaurants with votes: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/restaurants/dishes/{id}")
+    public List<Restaurant> getWithDishesById(@PathVariable int id){
+        List<Restaurant> restaurants = restaurantService.getWithDishes(id);
+        logger.info("Returning all restaurants with dishes by id{" + id + "}: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/restaurants/dishes/date/{localDate}")
+    public List<Restaurant> getWithDishesByDate(@PathVariable String localDate) throws ParseException {
+        List<Restaurant> restaurants = restaurantService.getWithDishes(localDate);
+        logger.info("Returning all restaurants with dishes by date{" + localDate + "}: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/dishes/restaurants")
+    public List<Dish> dishesWithRestaurants() {
         return dishService.getWithRestaurantsByDate(getDateToday());
     }
 
 
     @GetMapping("/result/{id}")
-    public List<Vote> votesWithRestaurants(@PathVariable int id) {
-        Restaurant restaurant = restaurantService.getWithVotes(id);
-        return restaurant.getVotes();
+    public List<Restaurant> votesWithRestaurants(@PathVariable int id) {
+        List<Restaurant> restaurant = restaurantService.getWithVotes(id);
+        return restaurant;
     }
 
     //https://stackoverflow.com/questions/29085295/spring-mvc-restcontroller-and-redirect

@@ -3,6 +3,7 @@ package com.kirilo.restaurant.voting.service;
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface RestaurantService {
@@ -18,7 +19,15 @@ public interface RestaurantService {
 
     List<Restaurant> getAll();
 
-    Restaurant getWithDishes(int id);
+    List<Restaurant> getWithDishes();
 
-    Restaurant getWithVotes(int id);
+    List<Restaurant> getWithDishes(int id);
+
+    List<Restaurant> getWithDishes(String date);
+
+    List<Restaurant> getWithVotes(int id);
+
+    Restaurant getWithDishes(int id, Date dateToday);
+
+    List<Restaurant> getWithVotes();
 }
