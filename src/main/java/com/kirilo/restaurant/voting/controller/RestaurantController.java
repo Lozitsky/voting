@@ -42,7 +42,7 @@ public class RestaurantController {
         @RequestMapping("/restaurants/restaurantForm")
         public String addRestaurant(Model model) {
             //fake data
-            model.addAttribute("restaurant", new Restaurant(null, "New restaurant"));
+            model.addAttribute("restaurant", new Restaurant("New restaurant", "Something about New restaurant"));
             return "restaurantForm.html";
         }
 

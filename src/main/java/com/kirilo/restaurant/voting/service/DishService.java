@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface DishService {
     List<Dish> getWithRestaurantsByDate(Date dateToday);
+
+    Dish create(Dish dish, int id);
 }

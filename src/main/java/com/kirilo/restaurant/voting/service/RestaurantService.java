@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface RestaurantService {
-    Restaurant create(Restaurant user);
+    Restaurant create(Restaurant restaurant);
 
     void delete(int id) throws NotFoundException;
 
@@ -30,4 +30,6 @@ public interface RestaurantService {
     Restaurant getWithDishes(int id, Date dateToday);
 
     List<Restaurant> getWithVotes();
+
+    List<Restaurant> getWithVotes(String localDate);
 }

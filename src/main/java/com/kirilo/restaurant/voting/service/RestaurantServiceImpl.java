@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.*;
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.convertToDate;
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.getLocalDateTime;
 import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithId;
 import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithName;
 
@@ -58,17 +58,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Restaurant> getWithDishes(int id) {
-//        return repository.getWithDishes(id);
         return checkNotFoundWithId(repository.getWithDishes(id), id);
     }
 
     @Override
     public List<Restaurant> getWithDishes(String stringDate) {
-        LocalDateTime startLocalDateTime = convertToLocalDateTime(getLocalDate(stringDate), getLocalTime("00:00:00"));
-        LocalDateTime endLocalDateTime = convertToLocalDateTime(getLocalDate(stringDate), getLocalTime("23:59:59"));
-//        return repository.getWithDishes(startLocalDateTime, endLocalDateTime);
-//        return repository.getWithDishes(convertToDate(getLocalDate(stringDate)), convertToDate(getLocalDate(stringDate)));
-        return repository.getWithDishes(convertToDate(startLocalDateTime), convertToDate(endLocalDateTime));
+        return repository.getWithDishes(convertToDate(getLocalDateTime(stringDate, "00:00:00")), convertToDate(getLocalDateTime(stringDate, "23:59:59")));
     }
 
     @Override
@@ -84,6 +79,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public List<Restaurant> getWithVotes() {
         return repository.getWithVotes();
+    }
+
+    @Override
+    public List<Restaurant> getWithVotes(String stringDate) {
+
+        return repository.getWithVotes(convertToDate(getLocalDateTime(stringDate, "00:00:00")), convertToDate(getLocalDateTime(stringDate, "23:59:59")));
     }
 
     @Override

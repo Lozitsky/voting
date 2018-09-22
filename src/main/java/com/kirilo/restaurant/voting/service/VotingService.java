@@ -16,4 +16,6 @@ public interface VotingService {
     void update(Vote vote, User user);
 
     List<Vote> getWithRestaurantsByDate(Date date);
+
+    List<Vote> getWithRestaurantsToday();
 }

@@ -5,7 +5,6 @@ import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.VotingService;
-import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import java.time.LocalDate;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
+import static com.kirilo.restaurant.voting.util.ValidationDateTime.getLastDate;
 
 @RestController
 @RequestMapping(UserVoting.REST)
@@ -35,7 +35,7 @@ public class UserVoting {
 
         User user = getUser();
 
-        LocalDate lastDate = ValidationDateTime.getLastDate(user);
+        LocalDate lastDate = getLastDate(user);
         LocalDate now = LocalDate.now();
 
         logger.info("Last voting: " + lastDate);

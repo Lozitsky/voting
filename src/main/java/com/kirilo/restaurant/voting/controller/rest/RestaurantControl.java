@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.alreadyVoted;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.getDateToday;
+import static com.kirilo.restaurant.voting.util.ValidationUtil.checkVoting;
 
 //http://qaru.site/questions/37305/avoid-jackson-serialization-on-non-fetched-lazy-objects
 @RestController
@@ -60,21 +59,14 @@ public class RestaurantControl {
     }
 
     @GetMapping("/restaurants/dishes")
-    public List<Restaurant> getWithDishes(){
+    public List<Restaurant> getWithDishes() {
         List<Restaurant> restaurants = restaurantService.getWithDishes();
         logger.info("Returning all restaurants with dishes: " + restaurants.toString());
         return restaurants;
     }
 
-    @GetMapping("/restaurants/votes")
-    public List<Restaurant> getWithVotes(){
-        List<Restaurant> restaurants = restaurantService.getWithVotes();
-        logger.info("Returning all restaurants with votes: " + restaurants.toString());
-        return restaurants;
-    }
-
     @GetMapping("/restaurants/dishes/{id}")
-    public List<Restaurant> getWithDishesById(@PathVariable int id){
+    public List<Restaurant> getWithDishesById(@PathVariable int id) {
         List<Restaurant> restaurants = restaurantService.getWithDishes(id);
         logger.info("Returning all restaurants with dishes by id{" + id + "}: " + restaurants.toString());
         return restaurants;
@@ -86,6 +78,32 @@ public class RestaurantControl {
         logger.info("Returning all restaurants with dishes by date{" + localDate + "}: " + restaurants.toString());
         return restaurants;
     }
+
+    @GetMapping("/restaurants/votes/date/{localDate}")
+    public List<Restaurant> getWithVotesByDate(@PathVariable String localDate, HttpServletResponse response) throws IOException {
+        checkVoting(getUser(), response);
+        List<Restaurant> restaurants = restaurantService.getWithVotes(localDate);
+        logger.info("Returning all restaurants with votes by date: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/restaurants/votes")
+    public List<Restaurant> getWithVotes(HttpServletResponse response) throws IOException {
+        checkVoting(getUser(), response);
+        List<Restaurant> restaurants = restaurantService.getWithVotes();
+        logger.info("Returning all restaurants with votes: " + restaurants.toString());
+        return restaurants;
+    }
+
+    @GetMapping("/restaurants/votes/{id}")
+    public List<Restaurant> getWithVotesById(@PathVariable int id, HttpServletResponse response) throws IOException {
+        checkVoting(getUser(), response);
+        List<Restaurant> restaurants = restaurantService.getWithVotes(id);
+        logger.info("Returning all restaurants with votes by id: " + restaurants.toString());
+        return restaurants;
+    }
+
+
 
     @GetMapping("/dishes/restaurants")
     public List<Dish> dishesWithRestaurants() {
@@ -102,18 +120,14 @@ public class RestaurantControl {
     //https://stackoverflow.com/questions/29085295/spring-mvc-restcontroller-and-redirect
     @GetMapping("/votes")
     public List<Vote> votesToday(HttpServletResponse response) throws IOException {
-        logger.info("Get User from session");
+        logger.info("Get authorized User ");
         User user = getUser();
 
-        if (!alreadyVoted(user)) {
-            logger.info("User " + user.getName() + " not voted yet");
-            response.sendRedirect("restaurants");
-        }
-        Date dateToday = getDateToday();
+        checkVoting(user, response);
 
-        logger.info("User " + user.getName() + " can see result for day " + dateToday);
+        logger.info("User " + user.getName() + " can see result for today ");
 
-        List<Vote> votes = votingService.getWithRestaurantsByDate(dateToday);
+        List<Vote> votes = votingService.getWithRestaurantsToday();
         return votes;
     }
 

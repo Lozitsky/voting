@@ -30,23 +30,20 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<Restaurant> getWithDishes();
 
     @EntityGraph(attributePaths = {"dishes"})
-    @SuppressWarnings("JpaQlInspection")
 //    @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(LocalDateTime startDate, LocalDateTime endDate);
 
     @EntityGraph(attributePaths = {"dishes"})
-    @SuppressWarnings("JpaQlInspection")
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(LocalDate startLocalDate, LocalDate endLocalDate);
 
     @EntityGraph(attributePaths = {"dishes"})
-    @SuppressWarnings("JpaQlInspection")
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(java.util.Date startDate, java.util.Date endDate);
 
     @EntityGraph(attributePaths = {"votes"})
-    @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2")
+    @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2 ORDER BY r.date DESC")
     Restaurant getWithVotes(int id, Date date);
 
     @EntityGraph(attributePaths = {"votes"})
@@ -59,5 +56,18 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
-    List<Restaurant> getWithVotes(Date date);
+//    List<Restaurant> getWithVotes(Date date);
+    List<Restaurant> getWithVotes(java.util.Date date);
+
+    @EntityGraph(attributePaths = {"votes"})
+    @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
+    List<Restaurant> getWithVotes(LocalDateTime startDate, LocalDateTime endDate);
+
+    @EntityGraph(attributePaths = {"votes"})
+    @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
+    List<Restaurant> getWithVotes(java.util.Date startDate, java.util.Date endDate);
+
+    @Override
+    @Transactional
+    Restaurant save(Restaurant restaurant);
 }

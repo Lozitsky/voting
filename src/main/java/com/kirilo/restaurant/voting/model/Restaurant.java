@@ -33,6 +33,11 @@ public class Restaurant extends AbstractNamedEntity {
         super(id, name);
     }
 
+    public Restaurant(String name, String description){
+        super(null, name);
+        this.description = description;
+    }
+
     public List<Dish> getDishes() {
         return dishes;
     }

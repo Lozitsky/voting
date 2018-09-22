@@ -73,4 +73,8 @@ public class ValidationDateTime {
     public static LocalTime getLocalTime(String stringTime) {
         return LocalTime.parse(stringTime);
     }
+
+    public static LocalDateTime getLocalDateTime(String stringDate, String stringTime) {
+        return convertToLocalDateTime(getLocalDate(stringDate), getLocalTime(stringTime));
+    }
 }
