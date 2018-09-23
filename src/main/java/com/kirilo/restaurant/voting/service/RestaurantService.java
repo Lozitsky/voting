@@ -3,7 +3,8 @@ package com.kirilo.restaurant.voting.service;
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
-import java.sql.Date;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 public interface RestaurantService {
@@ -15,21 +16,23 @@ public interface RestaurantService {
 
     Restaurant getByName(String name) throws NotFoundException;
 
-    void update(Restaurant restaurant);
+    void update(Restaurant restaurant, int id);
 
     List<Restaurant> getAll();
 
     List<Restaurant> getWithDishes();
 
-    List<Restaurant> getWithDishes(int id);
+    Restaurant getWithDishes(int id);
 
     List<Restaurant> getWithDishes(String date);
 
-    List<Restaurant> getWithVotes(int id);
-
     Restaurant getWithDishes(int id, Date dateToday);
 
-    List<Restaurant> getWithVotes();
+    List<Restaurant> getWithVotes(int id, HttpServletResponse response);
 
-    List<Restaurant> getWithVotes(String localDate);
+    List<Restaurant> getWithVotes(HttpServletResponse response);
+
+    List<Restaurant> getWithVotes(String stringDate, HttpServletResponse response);
+
+//    List<Restaurant> getForVoting();
 }

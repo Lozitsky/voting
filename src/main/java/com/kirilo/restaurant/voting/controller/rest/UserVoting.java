@@ -3,19 +3,21 @@ package com.kirilo.restaurant.voting.controller.rest;
 import com.kirilo.restaurant.voting.controller.VotingController;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
-import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.VotingService;
+import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
 import static com.kirilo.restaurant.voting.util.ValidationDateTime.getLastDate;
 
 @RestController
@@ -23,13 +25,17 @@ import static com.kirilo.restaurant.voting.util.ValidationDateTime.getLastDate;
 public class UserVoting {
     public final Logger logger = Logger.getLogger(VotingController.class);
     static final String REST = "/rest/user";
+    private final ValidationDateTime dateTime;
+    private final VotingService votingService;
 
+    //    https://dzone.com/articles/why-static-bad-and-how-avoid
     @Autowired
-    RestaurantService restaurantService;
+    public UserVoting(VotingService votingService) {
+        this.votingService = votingService;
+        dateTime = new ValidationDateTime();
+    }
 
-    @Autowired
-    VotingService votingService;
-
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/voteFor/10007
     @RequestMapping("/voteFor/{id}")
     public String voteFor(@PathVariable int id) {
 
@@ -38,11 +44,10 @@ public class UserVoting {
         LocalDate lastDate = getLastDate(user);
         LocalDate now = LocalDate.now();
 
-        logger.info("Last voting: " + lastDate);
-        logger.info("Local Date Now: " + now);
-        logger.info("Now is after last voting? " + now.isAfter(lastDate));
+        logger.info("Last voting: " + lastDate + "\nLocal Date Now: " + now +
+                "Now is after last voting? " + now.isAfter(lastDate));
 
-        if (canVote(user, lastDate, now)) {
+        if (dateTime.canVote(user, lastDate, now)) {
             if (now.equals(lastDate)) {
                 logger.info("it is before 11:00 we assume that user changed his mind");
                 Vote vote = votingService.get(user.getLastId());
@@ -65,5 +70,14 @@ public class UserVoting {
             return "Thank you for voting";
         }
         return "You have already voted";
+    }
+
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/votes
+    @GetMapping("/votes")
+    public List<Vote> votesToday(HttpServletResponse response) {
+        logger.info("Get result for voted today");
+
+        List<Vote> votes = votingService.getWithRestaurantsToday(response);
+        return votes;
     }
 }

@@ -10,10 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "persons", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 public class User extends Person {
-//    private static final long serialVersionUID = 1L;
-
-/*    @Column(name = "has_voted")
-    private boolean voted;*/
 
     @Column(name = "last_voting")
     private Date lastVoting;
@@ -27,14 +23,6 @@ public class User extends Person {
     public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Set<Role> roles) {
         super(id, name, email, password, enabled, registered, roles);
     }
-
-/*    public boolean isVoted() {
-        return voted;
-    }
-
-    public void setVoted(boolean voted) {
-        this.voted = voted;
-    }*/
 
     public Date getLastVoting() {
         return lastVoting;

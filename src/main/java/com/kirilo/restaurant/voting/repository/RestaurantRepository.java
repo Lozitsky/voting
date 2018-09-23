@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,13 +17,15 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
     Restaurant findById(int id);
 
+    Restaurant findByName(String name);
+
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2")
     Restaurant getWithDishes(int id, Date date);
 
     @EntityGraph(attributePaths = "dishes", type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
-    List<Restaurant> getWithDishes(int id);
+    Restaurant getWithDishes(int id);
 
     @EntityGraph(attributePaths = "dishes", type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r")
@@ -40,7 +42,10 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"dishes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
-    List<Restaurant> getWithDishes(java.util.Date startDate, java.util.Date endDate);
+    List<Restaurant> getWithDishes(Date startDate, Date endDate);
+
+/*    @Query("SELECT r FROM Restaurant r WHERE")
+    List<Restaurant> getWithDishes(Date dateToday);*/
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2 ORDER BY r.date DESC")
@@ -57,7 +62,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
 //    List<Restaurant> getWithVotes(Date date);
-    List<Restaurant> getWithVotes(java.util.Date date);
+    List<Restaurant> getWithVotes(Date date);
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
@@ -65,7 +70,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
-    List<Restaurant> getWithVotes(java.util.Date startDate, java.util.Date endDate);
+    List<Restaurant> getWithVotes(Date startDate,   Date endDate);
 
     @Override
     @Transactional

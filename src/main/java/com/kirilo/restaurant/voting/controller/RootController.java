@@ -4,7 +4,7 @@ import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.security.SecurityUtil;
 import com.kirilo.restaurant.voting.service.RestaurantService;
-import com.kirilo.restaurant.voting.service.UserService;
+import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
-
 @Controller
 public class RootController {
     public final Logger logger = Logger.getLogger(RootController.class);
+    private final RestaurantService restaurantService;
+    private final ValidationDateTime dateTime;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    RestaurantService restaurantService;
+    public RootController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+        dateTime = new ValidationDateTime();
+    }
 
     @GetMapping("/")
     public String goToVote() {
@@ -45,7 +45,7 @@ public class RootController {
 
         session.setAttribute("user", user);
 
-        if (canVote(user)) {
+        if (dateTime.canVote(user)) {
             logger.info("putting restaurants into model");
             List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);

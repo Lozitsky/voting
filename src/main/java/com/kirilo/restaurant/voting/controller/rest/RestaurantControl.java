@@ -3,11 +3,8 @@ package com.kirilo.restaurant.voting.controller.rest;
 import com.kirilo.restaurant.voting.controller.VotingController;
 import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.Restaurant;
-import com.kirilo.restaurant.voting.model.User;
-import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.RestaurantService;
-import com.kirilo.restaurant.voting.service.VotingService;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
-
-import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.getDateToday;
-import static com.kirilo.restaurant.voting.util.ValidationUtil.checkVoting;
 
 //http://qaru.site/questions/37305/avoid-jackson-serialization-on-non-fetched-lazy-objects
 @RestController
@@ -30,20 +21,20 @@ import static com.kirilo.restaurant.voting.util.ValidationUtil.checkVoting;
 //@PreAuthorize("hasRole('ADMIN')")
 //@Secured("ROLE_ADMIN")
 public class RestaurantControl {
-    //    static final String REST_URL = "rest/admin";
     static final String REST_URL = "rest";
 
     public final Logger logger = Logger.getLogger(VotingController.class);
 
-    @Autowired
-    DishService dishService;
+    private final DishService dishService;
+    private final RestaurantService restaurantService;
 
     @Autowired
-    RestaurantService restaurantService;
+    public RestaurantControl(DishService dishService, RestaurantService restaurantService) {
+        this.dishService = dishService;
+        this.restaurantService = restaurantService;
+    }
 
-    @Autowired
-    VotingService votingService;
-
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants
     @GetMapping("/restaurants")
     public List<Restaurant> getAll() {
         List<Restaurant> restaurants = restaurantService.getAll();
@@ -51,6 +42,7 @@ public class RestaurantControl {
         return restaurants;
     }
 
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurant/10004
     @GetMapping("/restaurant/{id}")
     public Restaurant goToRestaurant(@PathVariable int id) {
         Restaurant restaurant = restaurantService.get(id);
@@ -58,6 +50,7 @@ public class RestaurantControl {
         return restaurant;
     }
 
+    //curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes
     @GetMapping("/restaurants/dishes")
     public List<Restaurant> getWithDishes() {
         List<Restaurant> restaurants = restaurantService.getWithDishes();
@@ -65,70 +58,48 @@ public class RestaurantControl {
         return restaurants;
     }
 
-    @GetMapping("/restaurants/dishes/{id}")
-    public List<Restaurant> getWithDishesById(@PathVariable int id) {
-        List<Restaurant> restaurants = restaurantService.getWithDishes(id);
-        logger.info("Returning all restaurants with dishes by id{" + id + "}: " + restaurants.toString());
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurant/dishes/10006
+    @GetMapping("/restaurant/dishes/{id}")
+    public Restaurant getWithDishesById(@PathVariable int id) {
+        Restaurant restaurant = restaurantService.getWithDishes(id);
+        logger.info("Returning restaurant with dishes by id{" + id + "}: " + restaurant.toString());
+        return restaurant;
+    }
+
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes/date/2018-09-19
+    @GetMapping("/restaurants/dishes/date/{textDate}")
+    public List<Restaurant> getWithDishesByDate(@PathVariable String textDate) {
+        List<Restaurant> restaurants = restaurantService.getWithDishes(textDate);
+        logger.info("Returning all restaurants with dishes by date{" + textDate + "}: " + restaurants.toString());
         return restaurants;
     }
 
-    @GetMapping("/restaurants/dishes/date/{localDate}")
-    public List<Restaurant> getWithDishesByDate(@PathVariable String localDate) throws ParseException {
-        List<Restaurant> restaurants = restaurantService.getWithDishes(localDate);
-        logger.info("Returning all restaurants with dishes by date{" + localDate + "}: " + restaurants.toString());
-        return restaurants;
-    }
-
-    @GetMapping("/restaurants/votes/date/{localDate}")
-    public List<Restaurant> getWithVotesByDate(@PathVariable String localDate, HttpServletResponse response) throws IOException {
-        checkVoting(getUser(), response);
-        List<Restaurant> restaurants = restaurantService.getWithVotes(localDate);
+    @GetMapping("/restaurants/votes/date/{textDate}")
+    public List<Restaurant> getWithVotesByDate(@PathVariable String textDate, HttpServletResponse response) {
+        List<Restaurant> restaurants = restaurantService.getWithVotes(textDate, response);
         logger.info("Returning all restaurants with votes by date: " + restaurants.toString());
         return restaurants;
     }
 
     @GetMapping("/restaurants/votes")
-    public List<Restaurant> getWithVotes(HttpServletResponse response) throws IOException {
-        checkVoting(getUser(), response);
-        List<Restaurant> restaurants = restaurantService.getWithVotes();
+    public List<Restaurant> getWithVotes(HttpServletResponse response) {
+        List<Restaurant> restaurants = restaurantService.getWithVotes(response);
         logger.info("Returning all restaurants with votes: " + restaurants.toString());
         return restaurants;
     }
 
-    @GetMapping("/restaurants/votes/{id}")
-    public List<Restaurant> getWithVotesById(@PathVariable int id, HttpServletResponse response) throws IOException {
-        checkVoting(getUser(), response);
-        List<Restaurant> restaurants = restaurantService.getWithVotes(id);
+    @GetMapping("/restaurant/votes/{id}")
+    public List<Restaurant> getWithVotesById(@PathVariable int id, HttpServletResponse response) {
+        List<Restaurant> restaurants = restaurantService.getWithVotes(id, response);
         logger.info("Returning all restaurants with votes by id: " + restaurants.toString());
         return restaurants;
     }
 
-
-
-    @GetMapping("/dishes/restaurants")
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/dishes/forVoting
+    @GetMapping("/dishes/forVoting")
     public List<Dish> dishesWithRestaurants() {
-        return dishService.getWithRestaurantsByDate(getDateToday());
+        List<Dish> dishes = dishService.getForVoting();
+        logger.info("Returning all dishes with restaurants for voting: " + dishes.toString());
+        return dishes;
     }
-
-
-    @GetMapping("/result/{id}")
-    public List<Restaurant> votesWithRestaurants(@PathVariable int id) {
-        List<Restaurant> restaurant = restaurantService.getWithVotes(id);
-        return restaurant;
-    }
-
-    //https://stackoverflow.com/questions/29085295/spring-mvc-restcontroller-and-redirect
-    @GetMapping("/votes")
-    public List<Vote> votesToday(HttpServletResponse response) throws IOException {
-        logger.info("Get authorized User ");
-        User user = getUser();
-
-        checkVoting(user, response);
-
-        logger.info("User " + user.getName() + " can see result for today ");
-
-        List<Vote> votes = votingService.getWithRestaurantsToday();
-        return votes;
-    }
-
 }

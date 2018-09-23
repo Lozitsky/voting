@@ -18,18 +18,19 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.alreadyVoted;
-import static com.kirilo.restaurant.voting.util.ValidationDateTime.canVote;
-
 @Controller
 public class VotingController {
     public final Logger logger = Logger.getLogger(VotingController.class);
+    private final RestaurantService restaurantService;
+    private final VotingService votingService;
+    private final ValidationDateTime dateTime;
 
     @Autowired
-    RestaurantService restaurantService;
-
-    @Autowired
-    VotingService votingService;
+    public VotingController(RestaurantService restaurantService, VotingService votingService) {
+        this.restaurantService = restaurantService;
+        this.votingService = votingService;
+        dateTime = new ValidationDateTime();
+    }
 
     @RequestMapping("/voteFor")
     public String voteFor(@RequestParam int id, HttpSession session) {
@@ -44,7 +45,7 @@ public class VotingController {
         logger.info("Local Date Now: " + now);
         logger.info("Now is after last voting? " + now.isAfter(lastDate));
 
-        if (canVote(user, lastDate, now)) {
+        if (dateTime.canVote(user, lastDate, now)) {
 
             if (now.equals(lastDate)) {
                 logger.info("it is before 11:00 we assume that user changed his mind");
@@ -74,7 +75,7 @@ public class VotingController {
     @RequestMapping("/result")
     public String result(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (alreadyVoted(user)) {
+        if (dateTime.alreadyVoted(user)) {
             List<Restaurant> restaurants = restaurantService.getAll();
             model.addAttribute("restaurants", restaurants);
 

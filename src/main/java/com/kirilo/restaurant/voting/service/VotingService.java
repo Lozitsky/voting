@@ -4,7 +4,8 @@ import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -17,5 +18,5 @@ public interface VotingService {
 
     List<Vote> getWithRestaurantsByDate(Date date);
 
-    List<Vote> getWithRestaurantsToday();
+    List<Vote> getWithRestaurantsToday(HttpServletResponse response);
 }

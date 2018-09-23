@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.service;
 
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.repository.UserRepository;
+import com.kirilo.restaurant.voting.util.ValidationUtil;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,15 +10,15 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-import static com.kirilo.restaurant.voting.util.ValidationUtil.checkNotFoundWithName;
-
 @Service("userService")
 public class UserServiceImpl implements UserService {
     private final UserRepository repo;
+    private final ValidationUtil util;
 
     @Autowired
     public UserServiceImpl(UserRepository repo) {
         this.repo = repo;
+        util = new ValidationUtil();
     }
 
     @Override
@@ -43,13 +44,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByName(String name) throws NotFoundException {
         Assert.notNull(name, "the name must not be null");
-        return checkNotFoundWithName(repo.findByName(name), name);
+        return util.checkNotFoundWithName(repo.findByName(name), name);
     }
 
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
-        checkNotFoundWithName(repo.save(user), user.getName());
+        util.checkNotFoundWithName(repo.save(user), user.getName());
     }
 
     @Override
