@@ -9,3 +9,9 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson)
 
 
 <a href="https://voting-rest.herokuapp.com">Voting for restaurants</a>
+
+<h2>
+Curl commands:
+</h2>
+
+curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants
