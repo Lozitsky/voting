@@ -2,7 +2,7 @@
 language: java
 sudo: false
 jdk:
-  - oraclejdk8
+- oraclejdk8
 
 #https://dzone.com/articles/travis-ci-tutorial-java-projects
 #cache:
@@ -10,9 +10,9 @@ jdk:
 #  - $HOME/.m2
 
 # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
-#before_script:
-#- psql -c 'create database voting_system' -U postgres
-#- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
+before_script:
+- psql -c 'create database voting_system' -U postgres
+- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
 
 # https://docs.travis-ci.com/user/customizing-the-build#Building-Specific-Branches
 branches:
@@ -20,8 +20,8 @@ branches:
   - master
 
 #https://docs.travis-ci.com/user/environment-variables#Default-Environment-Variables
-#env:
-#- VOTING_ROOT=$TRAVIS_BUILD_DIR
+env:
+- VOTING_ROOT=$TRAVIS_BUILD_DIR
 
 # https://docs.travis-ci.com/user/notifications#Configuring-email-notifications
 #notifications:
