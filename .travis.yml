@@ -5,9 +5,12 @@ jdk:
 - oraclejdk8
 
 #https://dzone.com/articles/travis-ci-tutorial-java-projects
-#cache:
-#  directories:
-#  - $HOME/.m2
+cache:
+  directories:
+  - $HOME/.m2
+
+before_install:
+- chmod +x build.sh
 
 # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
 before_script:
