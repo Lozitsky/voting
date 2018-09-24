@@ -2,8 +2,13 @@ sudo: false
 language: java
 jdk:
 - oraclejdk8
-install: true
 cache:
   directories:
   - $HOME/.m2
-script: ./mvnw clean install
+install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -DskipNpmBuild=true -B -V
+
+  # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
+before_script:
+- psql -c 'create database topjava' -U postgres
+- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
+#script: ./mvnw clean install
