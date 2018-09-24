@@ -1,31 +1,9 @@
-# https://docs.travis-ci.com/user/languages/java/
+sudo: false
 language: java
-sudo: true
 jdk:
 - oraclejdk8
-
-#https://dzone.com/articles/travis-ci-tutorial-java-projects
+install: true
 cache:
   directories:
   - $HOME/.m2
-
-before_install:
-- chmod +x build.sh
-
-# https://docs.travis-ci.com/user/database-setup/#PostgreSQL
-before_script:
-- psql -c 'create database voting_system' -U postgres
-- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
-
-# https://docs.travis-ci.com/user/customizing-the-build#Building-Specific-Branches
-branches:
-  only:
-  - master
-
-#https://docs.travis-ci.com/user/environment-variables#Default-Environment-Variables
-env:
-- VOTING_ROOT=$TRAVIS_BUILD_DIR
-
-# https://docs.travis-ci.com/user/notifications#Configuring-email-notifications
-#notifications:
-#  email: false
+script: ./mvnw clean install
