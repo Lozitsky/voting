@@ -3,9 +3,9 @@ language: java
 jdk: oraclejdk8
 
 #https://dzone.com/articles/travis-ci-tutorial-java-projects
-#cache:
-#  directories:
-#  - E:/cashe/.m2
+cache:
+  directories:
+  - $HOME/.m2
 
 # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
 before_script:
