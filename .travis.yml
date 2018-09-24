@@ -1,6 +1,6 @@
 # https://docs.travis-ci.com/user/languages/java/
 language: java
-sudo: false
+sudo: true
 jdk:
 - oraclejdk8
 
