@@ -25,7 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/rest/restaurants/**").hasAnyRole("ADMIN")
                 .antMatchers("/rest/user/**").hasAnyRole("USER")
-                .anyRequest().fullyAuthenticated();
+                .anyRequest().denyAll();
+//                .anyRequest().fullyAuthenticated();
     }
 
 //For "In memory Authentication"
