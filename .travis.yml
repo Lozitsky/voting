@@ -20,8 +20,8 @@ branches:
   - master
 
 #https://docs.travis-ci.com/user/environment-variables#Default-Environment-Variables
-env:
-- VOTING_ROOT=$TRAVIS_BUILD_DIR
+#env:
+#- VOTING_ROOT=$TRAVIS_BUILD_DIR
 
 # https://docs.travis-ci.com/user/notifications#Configuring-email-notifications
 #notifications:
