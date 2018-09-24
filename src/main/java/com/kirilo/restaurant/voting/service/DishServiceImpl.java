@@ -74,4 +74,9 @@ public class DishServiceImpl implements DishService {
         return getWithRestaurantsByDate(dateTime.getDateToday());
     }
 
+    @Override
+    public int delete(int id) {
+        return util.checkNotFoundWithId(repository.delete(id), id);
+    }
+
 }

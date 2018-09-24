@@ -13,34 +13,36 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson)
 <br>
 <h5>Admin</h5>
 <ul>
-<li>Can registration</li>
-<li>Can add restaurants</li>
-<li>Can add dishes of restaurants</li>
-<li>Can't view result voting</li>
-<li>Can’t vote</li>
-<li>Can’t delete admins or users</li>
+<li>can registration</li>
+<li>can add restaurants(name and description)</li>
+<li>can add restaurants dishes(name and price)</li>
+<li>can watch the voting history(by restaurant Id, by date)</li>
+<li>can watch list of restaurants</li>
+<li>can watch list of dishes</li>
+<li>can’t vote</li>
+<li>can’t delete admins or users</li>
 </ul>
 <br>
 <h5>User</h5>
 <ul>
-<li>Can registration</li>
-<li>Can vote</li>
-<li>Can view result voting</li>
-<li>Can change his voice by 11 o’clock</li>
-<li>Can vote between 00:00 and 23:59</li>
-<li>Can’t add or remove restaurants and dishes and other entities</li>
+<li>can registration</li>
+<li>can vote</li>
+<li>can watch voting after the vote (if he has not voted, he will redirect to the voting list)</li>
+<li>can change his voice by 11 o’clock</li>
+<li>can vote between 00:00 and 23:59</li>
+<li>can’t add or remove restaurants and dishes and other entities</li>
 </ul>
 <br>
 <h5>Voting</h5>
 <ul>
-<li>From 00:00 to 23:59</li>
-<li>User can vote for menu created or updated today by Admin</li>
-<li>The system have a voting history by date</li>
+<li>from 00:00 to 23:59</li>
+<li>the user can vote for the menu that was created or updated by the Administrator today</li>
+<li>the system have a voting history by date</li>
 </ul>
 <br>
 <h5>Menu</h5>
 <ul>
-<li>The system have a menu(dishes) history by date</li>
+<li>the system have a menu(dishes) history by date</li>
 </ul>
 <br>
 <h5>Dish</h5>
@@ -48,9 +50,7 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson)
 <li>consist of the name and price</li>
 </ul>
 <br>
-<h4>
-Curl commands
-</h4>
+<h4>Curl commands</h4>
 <ul>
 <li>
 <h6>Get list all restaurants:</h6>
@@ -64,6 +64,7 @@ curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http:/
 <h6>Get restaurants with dishes:</h6>
 curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes
 </li>
+<li>
 <h6>Get restaurant with dishes by Id:</h6>
 curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurant/dishes/10006
 </li>
@@ -71,31 +72,57 @@ curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http:/
 <h6>Get restaurant with dishes by date:</h6>
 curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes/date/2018-09-19
 </li>
-<h6>Get munu(dishes) with restaurants for voting:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/dishes/forVoting
+<li>
+<h6>Get all restaurants with menu</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes
 </li>
 <li>
-<h6>Create restaurant menu by restaurant id(only for Admin):</h6>
-curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/create/10094 --data '{"name":"Some Dish3","price":300}'
+<h6>Get restaurant with votes by Id</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/10005
 </li>
-<h6>Update restaurant munu(dish) by dish id(only for Admin):</h6>
-curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/update/10020 --data '{"name":"Some Dish3 блюдо","price":350}'
+<li>
+<h6>Get restaurant with votes by date</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/date/2018-09-24
+</li>
+<li>
+<h6>Get munu(dishes) with restaurants for voting(only for User):</h6>
+curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/dishes/forVoting
+</li>
+<li>
+<h6>Create a dish by restaurant id(only for Admin):</h6>
+curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10008 --data '{"name":"Some Dish3 блюдо","price":350}'
+</li>
+<li>
+<h6>Update the dish by id(only for Admin):</h6>
+curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10022 --data '{"name":"New Dish блюдо","price":453}'
+</li>
+<li>
+<h6>Delete dish by id(only for Admin)</h6>
+curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10022
 </li>
 <li>
 <h6>Create restaurant(only for Admin):</h6>
-curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/create --data '{"name":"Ресторан Golden Star","description":"text текст"}'
+curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant --data '{"name":"Ресторан Golden Star","description":"text текст"}'
 </li>
-<h6>Update restaurant by restaurant Id(only for Admin):</h6>
-curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/update/10005 --data '{"name":"Ресторан New Star","description":"text текст"}'
+<li>
+<h6>Update restaurant by Id(only for Admin):</h6>
+curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10007 --data '{"name":"Ресторан NEW Star","description":"new текст"}'
+</li>
+<li>
+<h6>Delete Restaurant(only Admin):</h6>
+curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10008
 </li>
 <li>
 <h6>Get results voting(only for User)</h6>
 curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/votes
 </li>
+<li>
 <h6>Vote for a restaurant by restaurant Id(only for User)</h6>
 curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/voteFor/10007
-</li>
-<li>
-<h5></h5>
+<h6></h6>
 </li>
 </ul>
+<br>
+<footer>09.2018
+  <p>&copy; Created by <a href="https://github.com/Lozitsky" target="_blank">Kirilo Lozitsky</a></p>
+</footer>

@@ -1,10 +1,10 @@
 package com.kirilo.restaurant.voting.util;
 
-import com.kirilo.restaurant.voting.controller.VotingController;
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.repository.VotingRepository;
+import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 
 //https://www.baeldung.com/java-date-to-localdate-and-localdatetime
 public class ValidationDateTime {
-    public final static Logger logger = Logger.getLogger(VotingController.class);
+    public final static Logger logger = Logger.getLogger(ValidationDateTime.class);
 
     public boolean canVote(User user, LocalDate lastDate, LocalDate now) {
         return LocalTime.now().isBefore(LocalTime.of(11, 0)) || now.isAfter(lastDate);
@@ -91,10 +91,14 @@ public class ValidationDateTime {
     }
 
     //https://stackoverflow.com/questions/29085295/spring-mvc-restcontroller-and-redirect
-    public void checkVoting(User user, HttpServletResponse response) throws IOException {
+    public void checkVoting(User user, HttpServletResponse response){
         if (!alreadyVoted(user)) {
             logger.info("User " + user.getName() + " not voted yet");
-            response.sendRedirect("/rest/dishes/forVoting");
+            try {
+                response.sendRedirect("/rest/user/dishes/forVoting");
+            } catch (IOException e) {
+                throw new NotFoundException("Bad response from " + e.getLocalizedMessage());
+            }
         }
     }
 

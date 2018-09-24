@@ -13,4 +13,6 @@ public interface DishService {
     void update(Dish dish, int id);
 
     List<Dish> getForVoting();
+
+    int delete(int id);
 }

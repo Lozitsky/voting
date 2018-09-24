@@ -10,11 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -38,7 +35,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public void delete(int id) throws NotFoundException {
-
+        util.checkNotFoundWithId(repository.delete(id), id);
     }
 
     @Override
@@ -55,9 +52,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void update(Restaurant restaurant, int id) {
         Assert.notNull(restaurant, "restaurant must not be null");
         util.assureIdConsistent(restaurant, id);
-//        restaurant.setId(id);
         if (repository.findById(restaurant.getId()).orElse(null) == null) {
-//            return null;
             throw new NotFoundException("Restaurant not present in database");
         }
         util.checkNotFoundWithName(repository.save(restaurant), restaurant.getName());
@@ -90,36 +85,19 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Restaurant> getWithVotes(HttpServletResponse response) {
-        try {
-            dateTime.checkVoting(getUser(), response);
-        } catch (IOException e) {
-            throw new NotFoundException("Bad response from getWithVotes()");
-        }
+//            dateTime.checkVoting(getUser(), response);
         return repository.getWithVotes();
     }
 
     @Override
     public List<Restaurant> getWithVotes(String stringDate, HttpServletResponse response) {
-        try {
-            dateTime.checkVoting(getUser(), response);
-        } catch (IOException e) {
-            throw new NotFoundException("Bad response from getWithVotes(String)");
-        }
+//            dateTime.checkVoting(getUser(), response);
         return repository.getWithVotes(dateTime.getDate(stringDate, "00:00:00"), dateTime.getDate(stringDate, "23:59:59"));
     }
 
-/*    @Override
-    public List<Restaurant> getForVoting() {
-        return repository.getWithDishes(dateTime.getDateToday());
-    }*/
-
     @Override
     public List<Restaurant> getWithVotes(int id, HttpServletResponse response) {
-        try {
-            dateTime.checkVoting(getUser(), response);
-        } catch (IOException e) {
-            throw new NotFoundException("Bad response from getWithVotes(int)");
-        }
+//            dateTime.checkVoting(getUser(), response);
         return util.checkNotFoundWithId(repository.getWithVotes(id), id);
     }
 }

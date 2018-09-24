@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.repository;
 
 import com.kirilo.restaurant.voting.model.Dish;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,4 +19,9 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Override
     @Transactional
     Dish save(Dish dish);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Dish d WHERE d.id=:id")
+    int delete(int id);
 }

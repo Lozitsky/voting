@@ -1,8 +1,9 @@
 package com.kirilo.restaurant.voting.controller.rest;
 
-import com.kirilo.restaurant.voting.controller.VotingController;
+import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
+import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.VotingService;
 import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
@@ -23,16 +24,18 @@ import static com.kirilo.restaurant.voting.util.ValidationDateTime.getLastDate;
 @RestController
 @RequestMapping(UserVoting.REST)
 public class UserVoting {
-    public final Logger logger = Logger.getLogger(VotingController.class);
+    public final Logger logger = Logger.getLogger(UserVoting.class);
     static final String REST = "/rest/user";
     private final ValidationDateTime dateTime;
     private final VotingService votingService;
+    private final DishService dishService;
 
     //    https://dzone.com/articles/why-static-bad-and-how-avoid
     @Autowired
-    public UserVoting(VotingService votingService) {
+    public UserVoting(VotingService votingService, DishService dishService) {
         this.votingService = votingService;
         dateTime = new ValidationDateTime();
+        this.dishService = dishService;
     }
 
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/voteFor/10007
@@ -79,5 +82,13 @@ public class UserVoting {
 
         List<Vote> votes = votingService.getWithRestaurantsToday(response);
         return votes;
+    }
+
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/dishes/forVoting
+    @GetMapping("/dishes/forVoting")
+    public List<Dish> dishesWithRestaurants() {
+        List<Dish> dishes = dishService.getForVoting();
+        logger.info("Returning all dishes with restaurants for voting: " + dishes.toString());
+        return dishes;
     }
 }
