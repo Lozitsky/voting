@@ -3,9 +3,9 @@ language: java
 jdk: oraclejdk8
 
 #https://dzone.com/articles/travis-ci-tutorial-java-projects
-cache:
-  directories:
-  - E:/cashe/.m2
+#cache:
+#  directories:
+#  - E:/cashe/.m2
 
 # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
 before_script:
@@ -18,8 +18,8 @@ branches:
   - master
 
 #https://docs.travis-ci.com/user/environment-variables#Default-Environment-Variables
-#env:
-#- VOTING_ROOT=$TRAVIS_BUILD_DIR
+env:
+- VOTING_ROOT=$TRAVIS_BUILD_DIR
 
 # https://docs.travis-ci.com/user/notifications#Configuring-email-notifications
 #notifications:
