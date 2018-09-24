@@ -10,9 +10,9 @@ jdk:
 #  - $HOME/.m2
 
 # https://docs.travis-ci.com/user/database-setup/#PostgreSQL
-before_script:
-- psql -c 'create database voting_system' -U postgres
-- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
+#before_script:
+#- psql -c 'create database voting_system' -U postgres
+#- psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
 
 # https://docs.travis-ci.com/user/customizing-the-build#Building-Specific-Branches
 branches:
