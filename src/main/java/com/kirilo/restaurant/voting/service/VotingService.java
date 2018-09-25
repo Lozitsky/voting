@@ -19,4 +19,6 @@ public interface VotingService {
     List<Vote> getWithRestaurantsByDate(Date date);
 
     List<Vote> getWithRestaurantsToday(HttpServletResponse response);
+
+    boolean voteFor(int id);
 }

@@ -12,12 +12,12 @@ import java.util.List;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-    private final UserRepository repo;
+    private final UserRepository repository;
     private final ValidationUtil util;
 
     @Autowired
-    public UserServiceImpl(UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(UserRepository repository) {
+        this.repository = repository;
         util = new ValidationUtil();
     }
 
@@ -38,32 +38,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) throws NotFoundException {
-        return repo.getByEmail(email.toLowerCase());
+        return repository.getByEmail(email.toLowerCase());
     }
 
     @Override
     public User findByName(String name) throws NotFoundException {
         Assert.notNull(name, "the name must not be null");
-        return util.checkNotFoundWithName(repo.findByName(name), name);
+        return util.checkNotFoundWithName(repository.findByName(name), name);
     }
 
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
-        util.checkNotFoundWithName(repo.save(user), user.getName());
+        util.checkNotFoundWithName(repository.save(user), user.getName());
     }
 
     @Override
     public List<User> getAll() {
         return null;
     }
-/*
+
     @Override
-    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = getByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User " + email + " is not found");
-        }
-        return new AuthorizedUser(user);
-    }*/
+    public void setOff(int id) {
+        util.checkNotFoundWithId(repository.setStatus(false, id), id);
+    }
+
+    @Override
+    public void setOn(int id) {
+        util.checkNotFoundWithId(repository.setStatus(true, id), id);
+    }
 }

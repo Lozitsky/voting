@@ -19,4 +19,8 @@ public interface UserService {
     void update(User user);
 
     List<User> getAll();
+
+    void setOff(int id);
+
+    void setOn(int id);
 }

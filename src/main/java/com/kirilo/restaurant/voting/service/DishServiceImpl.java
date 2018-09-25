@@ -7,6 +7,7 @@ import com.kirilo.restaurant.voting.repository.RestaurantRepository;
 import com.kirilo.restaurant.voting.repository.VotingRepository;
 import com.kirilo.restaurant.voting.util.ValidationDateTime;
 import com.kirilo.restaurant.voting.util.ValidationUtil;
+import com.kirilo.restaurant.voting.util.VotingUtil;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class DishServiceImpl implements DishService {
     private final VotingRepository votingRepository;
     private final ValidationUtil util;
     private final ValidationDateTime dateTime;
+    private final VotingUtil valid;
 
     @Autowired
     public DishServiceImpl(DishRepository repository, RestaurantRepository restaurantRepository, VotingRepository votingRepository) {
@@ -31,6 +33,7 @@ public class DishServiceImpl implements DishService {
         this.votingRepository = votingRepository;
         util = new ValidationUtil();
         dateTime = new ValidationDateTime();
+        valid = new VotingUtil();
     }
 
     @Override
@@ -50,7 +53,7 @@ public class DishServiceImpl implements DishService {
             vote.setRestaurant(restaurant);
             votingRepository.save(vote);
         }*/
-        dateTime.checkVotingEntity(votingRepository, restaurant);
+        valid.checkVotingEntity(votingRepository, restaurant);
         return repository.save(dish);
     }
 
@@ -65,7 +68,7 @@ public class DishServiceImpl implements DishService {
         }
         Restaurant restaurant = updating.getRestaurant();
         dish.setRestaurant(restaurant);
-        dateTime.checkVotingEntity(votingRepository, restaurant);
+        valid.checkVotingEntity(votingRepository, restaurant);
         repository.save(dish);
     }
 

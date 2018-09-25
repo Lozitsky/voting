@@ -10,7 +10,7 @@ cache:
 before_script:
 - psql -c 'create database voting_system' -U postgres
 - psql -c 'create user "user"; grant all privileges on database voting_system to "user"' -U postgres
-#script: ./mvn clean install
+#https://stackoverflow.com/questions/41285388/travis-does-not-compile-the-project
 env:
 - MAVEN_VERSION=3.5.4
 install:
