@@ -47,25 +47,21 @@ public class DishServiceImpl implements DishService {
         Assert.notNull(dish, "dish must not be null");
         util.checkNew(dish);
         Restaurant restaurant = restaurantRepository.getOne(id);
-        dish.setRestaurant(restaurant);
-/*        if (votingRepository.findByRestaurantIdAndDate(restaurant.getId(), dateTime.getDateToday()).orElse(null) == null) {
-            Vote vote = new Vote();
-            vote.setRestaurant(restaurant);
-            votingRepository.save(vote);
-        }*/
         valid.checkVotingEntity(votingRepository, restaurant);
+        dish.setRestaurant(restaurant);
         return repository.save(dish);
     }
 
     @Override
     @Transactional
-    public void update(Dish dish, int id) {
+    public void update(Dish dish, int id) throws NotFoundException{
         Assert.notNull(dish, "dish must not be null");
         util.assureIdConsistent(dish, id);
-        Dish updating = repository.findById(id).orElse(null);
-        if (updating == null) {
+        Dish updating = repository.findById(id).orElseThrow(() -> new NotFoundException("Dish not present in database"));
+//                .orElse(null);
+/*        if (updating == null) {
             throw new NotFoundException("Dish not present in database");
-        }
+        }*/
         Restaurant restaurant = updating.getRestaurant();
         dish.setRestaurant(restaurant);
         valid.checkVotingEntity(votingRepository, restaurant);

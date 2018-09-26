@@ -35,7 +35,7 @@ public class RestaurantControl {
 
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/10004
     @GetMapping("/{id}")
-    public Restaurant goToRestaurant(@PathVariable int id) {
+    public Restaurant getRestaurant(@PathVariable int id) {
         Restaurant restaurant = restaurantService.get(id);
         logger.info("Returning restaurant: " + restaurant.toString());
         return restaurant;

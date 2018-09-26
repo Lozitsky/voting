@@ -1,12 +1,14 @@
 package com.kirilo.restaurant.voting.repository;
 
-import com.kirilo.restaurant.voting.model.Role;
 import com.kirilo.restaurant.voting.model.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Repository
@@ -15,7 +17,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User getByEmail(String email);
 
-//    User getUserByIdAndRolesContains(int id, Role role);
+    @Override
+    @Modifying
+    @EntityGraph(attributePaths = {"roles"}, type = EntityGraph.EntityGraphType.LOAD)
+    Optional<User> findById(Integer integer);
 
     @Transactional
     @Modifying

@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.controller.rest;
 
 import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.Restaurant;
+import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.UserService;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(AdminControl.REST_URL)
@@ -75,16 +78,30 @@ public class AdminControl {
     }
 
     //    curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/off/10003
-    @PutMapping("user/off/{id}")
+    @PutMapping("/user/off/{id}")
     public void switchOffUser(@PathVariable int id) {
         logger.info("Set user " + id + " status off");
-        userService.setOff(id);
+        userService.setOnOff(id, false);
     }
 
     //    curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/on/10003
-    @PutMapping("user/on/{id}")
+    @PutMapping("/user/on/{id}")
     public void switchOnUser(@PathVariable int id) {
         logger.info("Set user " + id + " status on");
-        userService.setOn(id);
+        userService.setOnOff(id, true);
+    }
+
+    //    curl -X GET -i http://localhost:8080/rest/admin/users
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        logger.info("Get all users");
+        return userService.getAll();
+    }
+
+//
+    @GetMapping("/user/{id}")
+    public User getUserWithRolesById(@PathVariable int id) {
+        logger.info("Get user by id=" + id);
+        return userService.getWithRoles(id);
     }
 }

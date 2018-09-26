@@ -1,5 +1,6 @@
 package com.kirilo.restaurant.voting.service;
 
+import com.kirilo.restaurant.voting.model.Role;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.repository.UserRepository;
 import com.kirilo.restaurant.voting.util.ValidationUtil;
@@ -55,16 +56,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return null;
+        return repository.findAll();
     }
 
     @Override
-    public void setOff(int id) {
-        util.checkNotFoundWithId(repository.setStatus(false, id), id);
+    public void setOnOff(int id, boolean on) {
+        User user = getWithRoles(id);
+        util.checkRole(user, Role.ROLE_USER);
+        repository.setStatus(on, id);
     }
 
     @Override
-    public void setOn(int id) {
-        util.checkNotFoundWithId(repository.setStatus(true, id), id);
+    public User getWithRoles(int id) throws NotFoundException{
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found User Entity in database with id=" + id));
     }
 }

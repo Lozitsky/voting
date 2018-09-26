@@ -20,7 +20,7 @@ public interface UserService {
 
     List<User> getAll();
 
-    void setOff(int id);
+    void setOnOff(int id, boolean on);
 
-    void setOn(int id);
+    User getWithRoles(int id);
 }

@@ -1,6 +1,8 @@
 package com.kirilo.restaurant.voting.util;
 
 import com.kirilo.restaurant.voting.model.AbstractEntity;
+import com.kirilo.restaurant.voting.model.Role;
+import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
 public class ValidationUtil {
@@ -36,6 +38,12 @@ public class ValidationUtil {
     public void checkNew(AbstractEntity bean) {
         if (!bean.isNew()) {
             throw new IllegalArgumentException(bean + " must be new (id=null)");
+        }
+    }
+
+    public void checkRole(User user, Role roleUser) {
+        if (!user.getRoles().contains(roleUser)) {
+            throw new NotFoundException(user + "must be with role USER");
         }
     }
 }

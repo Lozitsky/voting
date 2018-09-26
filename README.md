@@ -113,6 +113,14 @@ curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5
 curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10008
 </li>
 <li>
+<h6>Get user by id</h6>
+curl -X GET -i http://localhost:8080/rest/admin/user/10002
+</li>
+<li>
+<h6>Get all user by id</h6>
+curl -X GET -i http://localhost:8080/rest/admin/users
+</li>
+<li>
 <h6>Set the user field with the name enabled to true by id</h6>
 curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/on/10003
 </li>
