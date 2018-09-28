@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,12 @@ public class User extends Person {
     public User() {
     }
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Set<Role> roles) {
+
+    public User(Integer id, String name, String email, String password, Date registered, Role role, Role... roles) {
+        this(id, name, email, password, true, EnumSet.of(role, roles), registered);
+    }
+
+    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles, Date registered) {
         super(id, name, email, password, enabled, registered, roles);
     }
 
@@ -38,5 +44,15 @@ public class User extends Person {
 
     public void setLastId(int lastId) {
         this.lastId = lastId;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "lastVoting=" + lastVoting +
+                ", lastId=" + lastId +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

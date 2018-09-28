@@ -20,6 +20,10 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     Restaurant findByName(String name);
 
+    @Modifying
+    @Query("SELECT r FROM Restaurant r ORDER BY r.date DESC")
+    List<Restaurant> findAll();
+
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2")
     Restaurant getWithDishes(int id, Date date);
@@ -29,7 +33,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     Restaurant getWithDishes(int id);
 
     @EntityGraph(attributePaths = "dishes", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT r FROM Restaurant r")
+    @Query("SELECT r FROM Restaurant r ORDER BY r.date DESC")
     List<Restaurant> getWithDishes();
 
     @EntityGraph(attributePaths = {"dishes"})
@@ -62,7 +66,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
-//    List<Restaurant> getWithVotes(Date date);
     List<Restaurant> getWithVotes(Date date);
 
     @EntityGraph(attributePaths = {"votes"})

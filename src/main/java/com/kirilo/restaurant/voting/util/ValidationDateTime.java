@@ -1,6 +1,7 @@
 package com.kirilo.restaurant.voting.util;
 
 import com.kirilo.restaurant.voting.model.User;
+import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,11 +29,15 @@ public class ValidationDateTime {
         return java.sql.Date.valueOf(date);
     }
 
-    public Date convertToDate(String dateInString) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+    public Date convertToDate(String dateInString){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd", Locale.ENGLISH);
 
-//        String dateInString = "7-01-2018";
-        return formatter.parse(dateInString);
+//        String dateInString = "2018-07-21";
+        try {
+            return formatter.parse(dateInString);
+        } catch (ParseException e) {
+            throw new NotFoundException("Invalid date format");
+        }
     }
 
     public LocalDateTime convertToLocalDateTime(LocalDate date, LocalTime time) {

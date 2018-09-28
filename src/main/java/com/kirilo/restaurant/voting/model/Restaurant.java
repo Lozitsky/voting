@@ -3,6 +3,7 @@ package com.kirilo.restaurant.voting.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,8 +30,13 @@ public class Restaurant extends AbstractNamedEntity {
         super(null, name);
     }
 
-    public Restaurant(Integer id, String name) {
-        super(id, name);
+    public Restaurant(Restaurant restaurant) {
+        this(restaurant.getId(), restaurant.getName(), restaurant.getDescription(), restaurant.getDate());
+    }
+
+    public Restaurant(Integer id, String name, String description, Date date) {
+        super(id, name, date);
+        this.description = description;
     }
 
     public Restaurant(String name, String description){
@@ -54,5 +60,14 @@ public class Restaurant extends AbstractNamedEntity {
         return votes;
     }
 
+//    https://stackoverflow.com/questions/48132732/tostring-method-loads-lazy-fields-in-hibernate/52547740#52547740
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
 
