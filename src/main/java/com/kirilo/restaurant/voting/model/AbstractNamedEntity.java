@@ -35,12 +35,12 @@ public abstract class AbstractNamedEntity extends AbstractEntity {
         this.name = name;
     }
 
-
     @Override
     public String toString() {
         return "AbstractNamedEntity{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
+                ", date=" + date +
                 '}';
     }
 }

@@ -1,9 +1,13 @@
 package com.kirilo.restaurant.voting.util;
 
+import com.kirilo.restaurant.voting.model.AbstractEntity;
 import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.Restaurant;
 
 import java.time.Month;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.kirilo.restaurant.voting.model.AbstractEntity.START_SEQ;
 import static java.time.LocalDateTime.of;
@@ -45,5 +49,20 @@ public class RestaurantTestData {
     public final Dish DISH6 = new Dish(DISH6_ID, "Ужин", 500, dateTime.convertToDate("2018-09-28"));
     public final Dish DISH7 = new Dish(DISH7_ID, "Super ланч", 500, dateTime.convertToDate("2018-09-28"));
     public final Dish DISH8 = new Dish(DISH8_ID, "Super ужин", 500, dateTime.convertToDate("2018-09-28"));
+
+
+    public List<? extends AbstractEntity> sortedByDate(Dish... dishes) {
+        return sortedByDate(Arrays.asList(dishes));
+    }
+
+    public List<? extends AbstractEntity> sortedByDate(Restaurant... restaurants) {
+        return sortedByDate(Arrays.asList(restaurants));
+    }
+
+    public List<? extends AbstractEntity> sortedByDate(List<? extends AbstractEntity> entities) {
+        return entities.stream()
+                .sorted((o1, o2) -> (o2.getDate()).compareTo(o1.getDate()))
+                .collect(Collectors.toList());
+    }
 
 }

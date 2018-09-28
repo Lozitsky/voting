@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,7 +64,7 @@ public class SecuredControllerRestTemplateIntegrationTest {
                 .withBasicAuth("admin@gmail.com", "password")
                 .exchange(local + URL, HttpMethod.GET, null, paramType);
 
-        assertThat(list.getBody()).isEqualTo(restaurants);
+        assertThat(list.getBody()).isEqualTo(testData.sortedByDate(restaurants));
     }
 
     @Test
@@ -83,13 +82,13 @@ public class SecuredControllerRestTemplateIntegrationTest {
         ResponseEntity<List<Restaurant>> list = template
                 .withBasicAuth("admin@gmail.com", "password")
                 .exchange(local + URL + "/dishes", HttpMethod.GET, null, paramType);
-        List<Restaurant> actual = new ArrayList<>(list.getBody());
+        List<Restaurant> actual = list.getBody();
         assertThat(actual)
 //                .usingElementComparatorIgnoringFields("dishes")
                 .containsAll(restaurants);
-        assertThat((actual.get(2)).getDishes()).isEqualTo(Arrays.asList(testData.DISH1, testData.DISH2));
-        assertThat(actual.get(6).getDishes()).isEqualTo(Arrays.asList(testData.DISH3, testData.DISH7, testData.DISH8, testData.DISH4));
-        assertThat(actual.get(4).getDishes()).isEqualTo(Arrays.asList(testData.DISH6, testData.DISH5));
+        assertThat((actual.get(2)).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH1, testData.DISH2));
+        assertThat(actual.get(6).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH3, testData.DISH7, testData.DISH8, testData.DISH4));
+        assertThat(actual.get(4).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH6, testData.DISH5));
 
     }
 

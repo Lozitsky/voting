@@ -22,7 +22,7 @@ public abstract class AbstractEntity implements Persistable<Integer> {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm"    )
     @Column(name = "date", columnDefinition = "timestamp default now()")
     @NotNull
-    private Date date = new Date();
+    protected Date date = new Date();
 
     protected AbstractEntity() {
     }
