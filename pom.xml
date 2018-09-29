@@ -102,7 +102,7 @@
             </plugin>
 
             <!--https://devcenter.heroku.com/articles/java-webapp-runner#configure-maven-to-download-webapp-runner -->
-            <!--https://github.com/jsimone/webapp-runner-->
+            <!-- https://github.com/jsimone/webapp-runner -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
