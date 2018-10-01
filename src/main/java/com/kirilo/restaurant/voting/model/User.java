@@ -1,5 +1,10 @@
 package com.kirilo.restaurant.voting.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kirilo.restaurant.voting.web.json.DateHandler;
+import com.kirilo.restaurant.voting.web.json.DateSerializer;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,6 +18,8 @@ import java.util.Set;
 public class User extends Person {
 
     @Column(name = "last_voting")
+    @JsonDeserialize(using = DateHandler.class)
+    @JsonSerialize(using = DateSerializer.class)
     private Date lastVoting;
 
     @Column(name = "last_id")

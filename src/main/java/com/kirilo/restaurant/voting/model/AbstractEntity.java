@@ -1,6 +1,10 @@
 package com.kirilo.restaurant.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kirilo.restaurant.voting.web.json.DateHandler;
+import com.kirilo.restaurant.voting.web.json.DateSerializer;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -19,9 +23,11 @@ public abstract class AbstractEntity implements Persistable<Integer> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     protected Integer id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm"    )
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss"    )
     @Column(name = "date", columnDefinition = "timestamp default now()")
     @NotNull
+    @JsonDeserialize(using = DateHandler.class)
+    @JsonSerialize(using = DateSerializer.class)
     protected Date date = new Date();
 
     protected AbstractEntity() {

@@ -15,4 +15,6 @@ public interface DishService {
     List<Dish> getForVoting();
 
     int delete(int id);
+
+    Dish get(int id);
 }

@@ -39,6 +39,11 @@ public class Restaurant extends AbstractNamedEntity {
         this.description = description;
     }
 
+    public Restaurant(String name, String description, Date date) {
+        super(null, name, date);
+        this.description = description;
+    }
+
     public Restaurant(String name, String description){
         super(null, name);
         this.description = description;

@@ -2,6 +2,7 @@ package com.kirilo.restaurant.voting.controller.rest;
 
 import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.util.RestaurantTestData;
+import org.jboss.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,16 +13,22 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SecuredControllerRestTemplateIntegrationTest {
+@Sql(value = "/db/populateDB.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
+public class SecuredRestaurantControllerRestTemplateIntegrationTest {
+    private final Logger logger = Logger.getLogger(SecuredRestaurantControllerRestTemplateIntegrationTest.class);
     private final static String URL = RestaurantControl.REST_URL;
     private String local = "http://localhost:";
 
@@ -37,7 +44,7 @@ public class SecuredControllerRestTemplateIntegrationTest {
 
     @Before
     public void setup() {
-        local += port;
+        local += port + "/";
         testData = new RestaurantTestData();
         restaurants = new ArrayList<>();
 
@@ -74,6 +81,7 @@ public class SecuredControllerRestTemplateIntegrationTest {
                 .withBasicAuth("admin@gmail.com", "password")
                 .getForObject(local + URL + "/{id}", Restaurant.class, id);
         assertThat(restaurant).isEqualTo(testData.RESTAURANT1);
+        logger.info(restaurant);
     }
 
     @Test
@@ -89,7 +97,6 @@ public class SecuredControllerRestTemplateIntegrationTest {
         assertThat((actual.get(2)).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH1, testData.DISH2));
         assertThat(actual.get(6).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH3, testData.DISH7, testData.DISH8, testData.DISH4));
         assertThat(actual.get(4).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH6, testData.DISH5));
-
     }
 
     @Test

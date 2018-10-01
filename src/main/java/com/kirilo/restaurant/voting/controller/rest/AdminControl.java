@@ -35,9 +35,10 @@ public class AdminControl {
 
     //    curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant --data '{"name":"Ресторан Golden Star","description":"text текст"}'
     @PostMapping("/restaurant")
-    public ResponseEntity<Restaurant> restaurantCreate(@RequestBody Restaurant restaurant) {
+    public Restaurant restaurantCreate(@RequestBody Restaurant restaurant) {
         logger.info("Creating restaurant");
-        return valid.entityFromURI(restaurantService.create(restaurant));
+//        return valid.entityFromURI(restaurantService.create(restaurant));
+        return restaurantService.create(restaurant);
     }
 
     //    curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/update/10005 --data '{"name":"Ресторан New Star","description":"text текст"}'
@@ -60,6 +61,12 @@ public class AdminControl {
     public ResponseEntity<Dish> dishCreated(@RequestBody Dish dish, @PathVariable int id) {
         logger.info("Creating dish");
         return valid.entityFromURI(dishService.create(dish, id));
+    }
+
+    @GetMapping("/dish/{id}")
+    public Dish dishUpdate(@PathVariable int id) {
+        logger.info("Getting dish " + id);
+        return dishService.get(id);
     }
 
     //    curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10022 --data '{"name":"New Dish блюдо","price":453}'

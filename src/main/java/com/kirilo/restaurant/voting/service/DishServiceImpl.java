@@ -57,7 +57,7 @@ public class DishServiceImpl implements DishService {
     public void update(Dish dish, int id) throws NotFoundException{
         Assert.notNull(dish, "dish must not be null");
         util.assureIdConsistent(dish, id);
-        Dish updating = repository.findById(id).orElseThrow(() -> new NotFoundException("Dish not present in database"));
+        Dish updating = repository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id="+ id +" not present in database"));
 //                .orElse(null);
 /*        if (updating == null) {
             throw new NotFoundException("Dish not present in database");
@@ -76,6 +76,11 @@ public class DishServiceImpl implements DishService {
     @Override
     public int delete(int id) {
         return util.checkNotFoundWithId(repository.delete(id), id);
+    }
+
+    @Override
+    public Dish get(int id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id="+ id +" not present in database"));
     }
 
 }
