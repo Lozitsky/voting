@@ -1,14 +1,10 @@
 package com.kirilo.restaurant.voting.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kirilo.restaurant.voting.web.json.DateHandler;
-import com.kirilo.restaurant.voting.web.json.DateSerializer;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
@@ -18,8 +14,6 @@ import java.util.Set;
 public class User extends Person {
 
     @Column(name = "last_voting")
-    @JsonDeserialize(using = DateHandler.class)
-    @JsonSerialize(using = DateSerializer.class)
     private Date lastVoting;
 
     @Column(name = "last_id")
@@ -29,11 +23,11 @@ public class User extends Person {
     }
 
 
-    public User(Integer id, String name, String email, String password, Date registered, Role role, Role... roles) {
+    public User(Integer id, String name, String email, String password, LocalDateTime registered, Role role, Role... roles) {
         this(id, name, email, password, true, EnumSet.of(role, roles), registered);
     }
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles, Date registered) {
+    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles, LocalDateTime registered) {
         super(id, name, email, password, enabled, registered, roles);
     }
 
@@ -53,7 +47,7 @@ public class User extends Person {
         this.lastId = lastId;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return "User{" +
                 "lastVoting=" + lastVoting +
@@ -61,5 +55,5 @@ public class User extends Person {
                 ", name='" + name + '\'' +
                 ", id=" + id +
                 '}';
-    }
+    }*/
 }

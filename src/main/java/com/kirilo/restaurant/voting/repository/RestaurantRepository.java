@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -26,7 +26,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2")
-    Restaurant getWithDishes(int id, Date date);
+    Restaurant getWithDishes(int id, LocalDateTime date);
 
     @EntityGraph(attributePaths = "dishes", type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
@@ -36,15 +36,18 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r FROM Restaurant r ORDER BY r.date DESC")
     List<Restaurant> getWithDishes();
 
+    @SuppressWarnings("JpaQlInspection")
     @EntityGraph(attributePaths = {"dishes"})
 //    @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(LocalDateTime startDate, LocalDateTime endDate);
 
+    @SuppressWarnings("JpaQlInspection")
     @EntityGraph(attributePaths = {"dishes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(LocalDate startLocalDate, LocalDate endLocalDate);
 
+   @SuppressWarnings("JpaQlInspection")
     @EntityGraph(attributePaths = {"dishes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithDishes(Date startDate, Date endDate);
@@ -54,7 +57,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 AND r.date=?2 ORDER BY r.date DESC")
-    Restaurant getWithVotes(int id, Date date);
+    Restaurant getWithVotes(int id, LocalDateTime date);
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1 ORDER BY r.date DESC")
@@ -66,15 +69,17 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date=?1 ORDER BY r.date DESC")
-    List<Restaurant> getWithVotes(Date date);
+    List<Restaurant> getWithVotes(LocalDateTime date);
 
+    @SuppressWarnings("JpaQlInspection")
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
     List<Restaurant> getWithVotes(LocalDateTime startDate, LocalDateTime endDate);
 
+    @SuppressWarnings("JpaQlInspection")
     @EntityGraph(attributePaths = {"votes"})
     @Query("SELECT r FROM Restaurant r WHERE r.date BETWEEN ?1 AND ?2 ORDER BY r.date DESC")
-    List<Restaurant> getWithVotes(Date startDate,   Date endDate);
+    List<Restaurant> getWithVotes(Date startDate, Date endDate);
 
     @Override
     @Transactional

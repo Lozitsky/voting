@@ -10,7 +10,7 @@ INSERT INTO persons (name, email, password, date, last_id, last_voting) VALUES
   ('User', 'user@ukr.net', 'password', '2018-09-15 01:01:01', 111, '2018-09-15'),
   ('Admin', 'admin@gmail.com', 'password', '2018-09-14 02:02:02', 111, '2018-09-15'),
   ('User2', 'user2@yandex.ru', 'password', '2018-09-13 03:03:03', 111, '2018-09-15'),
-  ('User3', 'user3@yandex.ru', 'password', '2018-09-12 04:04:04', 111, '2018-09-15');
+  ('User3', 'user3@mail.ru', 'password', '2018-09-12 04:04:04', 111, '2018-09-15');
 
 INSERT INTO person_roles (role, person_id) VALUES
   ('ROLE_USER', 10000),

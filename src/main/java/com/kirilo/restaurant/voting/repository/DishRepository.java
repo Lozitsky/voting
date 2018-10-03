@@ -13,7 +13,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Integer> {
-    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.date = ?1")
+    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.date = ?1 ORDER BY d.date DESC")
     List<Dish> getDateToday(Date date);
 
     @Override
@@ -24,4 +24,7 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Modifying
     @Query("DELETE FROM Dish d WHERE d.id=:id")
     int delete(int id);
+
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id = ?1 ORDER BY d.date DESC")
+    List<Dish> getAll(int restaurantId);
 }

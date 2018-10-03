@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -37,8 +39,8 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getWithRestaurantsByDate(Date dateToday) {
-        return repository.getDateToday(dateToday);
+    public List<Dish> getWithRestaurantsByDate(LocalDateTime dateToday) {
+        return repository.getDateToday(dateTime.convertToDate(dateToday));
     }
 
     @Override
@@ -70,7 +72,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<Dish> getForVoting() {
-        return getWithRestaurantsByDate(dateTime.getDateToday());
+        return getWithRestaurantsByDate(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
     }
 
     @Override
@@ -81,6 +83,11 @@ public class DishServiceImpl implements DishService {
     @Override
     public Dish get(int id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id="+ id +" not present in database"));
+    }
+
+    @Override
+    public List<Dish> getAll(int restaurantId) {
+        return repository.getAll(restaurantId);
     }
 
 }

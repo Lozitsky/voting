@@ -5,17 +5,14 @@ import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Date;
-import java.util.Locale;
 
 //https://www.baeldung.com/java-date-to-localdate-and-localdatetime
 public class ValidationDateTime {
 
     public LocalDate getLastDate(User user) {
+//        return user.getLastVoting();
         return new java.sql.Date(user.getLastVoting().getTime()).toLocalDate();
     }
 
@@ -25,12 +22,18 @@ public class ValidationDateTime {
                         .toInstant());
     }
 
+    public LocalDateTime convertToLocalDateTime(Date date) {
+//        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return new java.sql.Timestamp(
+                date.getTime()).toLocalDateTime();
+    }
+
     public Date convertToDate(LocalDate date) {
         return java.sql.Date.valueOf(date);
     }
 
     public Date convertToDate(String dateInString){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 //        String dateInString = "2018-07-21";
         try {
@@ -44,8 +47,13 @@ public class ValidationDateTime {
         return LocalDateTime.of(date, time);
     }
 
-    public Date getDateToday() {
+/*    public Date getDateToday() {
         return convertToDate(LocalDate.now());
+    }*/
+
+    public LocalDate getDateToday() {
+        return LocalDate.now();
+//        return LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
     }
 
     public LocalDate getLocalDate(String stringDate) {

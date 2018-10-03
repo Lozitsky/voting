@@ -5,7 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 //https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
 
@@ -17,8 +17,8 @@ public class Dish extends AbstractNamedEntity {
 
     //    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "restaurant_id", nullable = false)
-//    @JoinColumn(name = "restaurant_id")
+//  @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Restaurant restaurant;
@@ -36,12 +36,12 @@ public class Dish extends AbstractNamedEntity {
         this.price = price;
     }
 
-    public Dish(Integer id, String dishName, int price, Date date) {
+    public Dish(Integer id, String dishName, int price, LocalDateTime date) {
         super(id, dishName, date);
         this.price = price;
     }
 
-    public Dish(String dishName, int price, Date date) {
+    public Dish(String dishName, int price, LocalDateTime date) {
         super(null, dishName, date);
         this.price = price;
     }

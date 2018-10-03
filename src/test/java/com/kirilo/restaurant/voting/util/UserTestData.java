@@ -14,7 +14,7 @@ public class UserTestData {
 
     public final int USER_ID = START_SEQ;
     public final int ADMIN_ID = START_SEQ + 1;
-    public final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "password", dateTime.convertToDate(of(2018, Month.SEPTEMBER,14, 02,02,02)), Role.ROLE_ADMIN);
+    public final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "password", of(2018, Month.SEPTEMBER,14, 02,02,02), Role.ROLE_ADMIN);
 
     public UserTestData() {
         dateTime = new ValidationDateTime();

@@ -2,7 +2,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7874e7f975c4b82ad5f3aa5a605d823)](https://www.codacy.com/app/Lozitsky/voting?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lozitsky/voting&amp;utm_campaign=Badge_Grade)
 
 <h1># private voting system</h1>
-Maven Spring Boot Security JPA(Hibernate) REST(Jackson)
+Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 <br>
 <br>
 <br>
@@ -13,19 +13,20 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson)
 <br>
 <h5>Admin</h5>
 <ul>
-<li>can registration</li>
+<li>can registration( admin@gmail.com:password )</li>
 <li>can add restaurants(name and description)</li>
 <li>can add restaurants dishes(name and price)</li>
 <li>can watch the voting history(by restaurant Id, by date)</li>
 <li>can watch list of restaurants</li>
 <li>can watch list of dishes</li>
+<li>can change field enable(true|false) for users</li>
 <li>can’t vote</li>
 <li>can’t delete admins or users</li>
 </ul>
 <br>
 <h5>User</h5>
 <ul>
-<li>can registration</li>
+<li>can registration( user2@yandex.ru:password )</li>
 <li>can vote</li>
 <li>can watch voting after the vote (if he has not voted, he will redirect to the voting list)</li>
 <li>can change his voice by 11 o’clock</li>
@@ -138,7 +139,10 @@ curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http:/
 <h6></h6>
 </li>
 </ul>
+
+For testing on Firefox can try <a href="http://restclient.net/"> RESTClient</a>
 <br>
-<footer>09.2018
+<footer>10.2018
   <p>&copy; Created by <a href="https://github.com/Lozitsky" target="_blank">Kirilo Lozitsky</a></p>
+  <a href="mailto:kirilojava@ukr.net">Email for questions</a> 
 </footer>

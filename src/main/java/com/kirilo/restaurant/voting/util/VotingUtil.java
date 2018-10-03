@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
@@ -71,7 +72,7 @@ public class VotingUtil {
     }
 
     public void checkVotingEntity(VotingRepository repository, Restaurant restaurant) {
-        if (repository.findByRestaurantIdAndDate(restaurant.getId(), dateTime.getDateToday()).orElse(null) == null) {
+        if (repository.getByRestaurantIdAndDate(restaurant.getId(), LocalDateTime.of(LocalDate.now(), LocalTime.MIN), LocalDateTime.of(LocalDate.now(), LocalTime.MAX)).orElse(null) == null) {
             Vote vote = new Vote();
             vote.setRestaurant(restaurant);
             repository.save(vote);

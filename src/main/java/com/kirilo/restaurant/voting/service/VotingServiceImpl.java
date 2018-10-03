@@ -11,11 +11,13 @@ import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
@@ -23,9 +25,11 @@ import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 @Service
 public class VotingServiceImpl implements VotingService {
     public final Logger logger = Logger.getLogger(VotingServiceImpl.class);
-
+    @Autowired
     private final VotingRepository repository;
+
     private final UserRepository userRepository;
+
     private final ValidationDateTime dateTime;
     private final ValidationUtil util;
     private final VotingUtil valid;
@@ -42,10 +46,14 @@ public class VotingServiceImpl implements VotingService {
     //    https://www.baeldung.com/java-date-to-localdate-and-localdatetime
     @Override
     public Vote get(int id) {
-        return repository.findByRestaurantIdAndDate(id, dateTime.getDateToday()).orElse(null);
+//        return repository.findByRestaurantIdAndDate(id, dateTime.getDateToday()).orElse(null);
+        return repository.getByRestaurantIdAndDate(id, LocalDateTime.of(LocalDate.now(), LocalTime.MIN), LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
+//        return repository.getByRestaurantIdAndDate(id, dateTime.convertToDate(LocalDate.now()), dateTime.convertToDate(LocalDateTime.of(LocalDate.now(), LocalTime.MAX)))
+                .orElse(null);
     }
 
     @Override
+    @Transactional
     public void update(Vote vote, User user) {
         Assert.notNull(vote, "restaurant must not be null");
         repository.save(vote);
@@ -54,8 +62,9 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public List<Vote> getWithRestaurantsByDate(Date date) {
-        return repository.getWithRestaurantsByDate(date);
+    public List<Vote> getWithRestaurantsByDate(LocalDateTime date) {
+
+        return repository.getWithRestaurantsByDate(dateTime.convertToDate(date));
     }
 
     @Override
@@ -65,14 +74,15 @@ public class VotingServiceImpl implements VotingService {
         valid.checkVoting(user, response);
 
         logger.info("User " + user.getName() + " can see result for today ");
-        Date dateToday = dateTime.getDateToday();
-        logger.info("Today is " + dateToday);
-        return getWithRestaurantsByDate(dateToday);
+//        LocalDate dateToday = dateTime.getDateToday();
+
+        LocalDate now = LocalDate.now();
+        logger.info("Today is " + now);
+        return getWithRestaurantsByDate(LocalDateTime.of(now, LocalTime.MIN));
     }
 
     @Override
-    public boolean voteFor(int id) {
-        User user = getUser();
+    public Vote voteFor(int id, User user) throws NotFoundException {
 
         LocalDate lastDate = dateTime.getLastDate(user);
         LocalDate now = LocalDate.now();
@@ -96,14 +106,21 @@ public class VotingServiceImpl implements VotingService {
             vote.setNumberOfVotes(vote.getNumberOfVotes() + 1);
 
             user.setLastId(id);
-//            user.setLastVoting(java.sql.Date.valueOf(now));
-            user.setLastVoting(dateTime.convertToDate(now));
+            user.setLastVoting(java.sql.Date.valueOf(now));
+//            user.setLastVoting(dateTime.convertToDate(now));
+//            user.setLastVoting(LocalDateTime.of(now, LocalTime.MIN));
 
-            update(vote, user);
+//            update(vote, user);
             //"Thank you for voting"
-            return true;
+            return vote;
         }
         //  "You have already voted"
-        return false;
+        return null;
     }
+
+/*    @Override
+    public Vote getVoteByRestaurantId(int id) {
+        return repository.findByRestaurantIdAndDate(id, LocalDate.now())
+                .orElseThrow(() -> new NotFoundException("Can't fined entity vote today"));
+    }*/
 }

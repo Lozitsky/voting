@@ -11,9 +11,9 @@ import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.util.RestaurantTestData;
 import com.kirilo.restaurant.voting.util.ValidationDateTime;
+import org.jboss.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.kirilo.restaurant.voting.model.AbstractEntity.START_SEQ;
+import static junit.framework.TestCase.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 @Transactional
 @RunWith(SpringRunner.class)
@@ -41,8 +43,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //    https://stackoverflow.com/questions/27126974/how-to-execute-sql-before-a-before-method/27156080
 @Sql(value = "/db/populateDB.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 public class AdminRestControlTest {
+    private final Logger logger = Logger.getLogger(AdminRestControlTest.class);
     private final String REST_URL = AdminControl.REST_URL + "/restaurant";
-    private final String RESTAURANT_URL = RestaurantControl.REST_URL;
     private final String DISH_URL = AdminControl.REST_URL + "/dish";
 
     private String local = "http://localhost:";
@@ -86,7 +88,7 @@ public class AdminRestControlTest {
         testData = new RestaurantTestData();
     }
 
-    @BeforeEach
+//    @BeforeEach
     @Sql(value = "/db/populateDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
     void setUpEach() {
 //        cacheManager.getCache("restaurants").clear();
@@ -94,7 +96,7 @@ public class AdminRestControlTest {
 
     @Test
     public void restaurantCreate() throws Exception {
-        Restaurant restaurant = new Restaurant("New Restaurant", "description restaurant", dateTime.getDateToday());
+        Restaurant restaurant = new Restaurant("New Restaurant", "description restaurant", LocalDateTime.now());
         ResponseEntity<Restaurant> responseEntity = (ResponseEntity<Restaurant>) createEntity(REST_URL, restaurant);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Restaurant responseRestaurant = responseEntity.getBody();
@@ -105,22 +107,31 @@ public class AdminRestControlTest {
 
     @Test
     public void restaurantUpdate() throws URISyntaxException {
-        Restaurant restaurant = new Restaurant(testData.RESTAURANT2_ID, "Second Restaurant", "description ресторан", dateTime.getDate("2018-09-10", "11:12:13"));
-        Restaurant entity = (Restaurant) updateEntity(RESTAURANT_URL, restaurant);
+        Restaurant restaurant = new Restaurant(testData.RESTAURANT2_ID, "Second Restaurant", "description ресторан", dateTime.getLocalDateTime("2018-09-10", "11:12:13"));
+        Restaurant entity = (Restaurant) updateEntity(REST_URL, restaurant);
         assertEquals(restaurant, entity);
     }
 
     @Test
-    public void restaurantDelete() {
-        deleteEntity(REST_URL, testData.RESTAURANT1_ID);
+    public void restaurantDelete() throws URISyntaxException {
+        Restaurant entity = (Restaurant) deleteEntity(REST_URL, testData.RESTAURANT1);
         assertThat(restaurantService.getAll()).isEqualTo(testData.sortedByDate(testData.RESTAURANT2, testData.RESTAURANT3, testData.RESTAURANT4, testData.RESTAURANT5, testData.RESTAURANT6, testData.RESTAURANT7));
+        assertEquals(testData.RESTAURANT1, entity);
+    }
+
+    @Test
+    public void getRestaurant() {
+        String localUrl = local + REST_URL + "/{id}";
+        Restaurant restaurant = (Restaurant) getEntity(localUrl, testData.RESTAURANT1);
+        assertThat(restaurant).isEqualTo(testData.RESTAURANT1);
+        logger.info(restaurant);
     }
 
     @Test
     public void dishCreated() {
-        Dish dish = new Dish("new name", 100, dateTime.getDateToday());
+        Dish dish = new Dish("new name", 100, LocalDateTime.now());
         ResponseEntity<Dish> responseEntity = (ResponseEntity<Dish>) createEntity(DISH_URL + "/" + testData.RESTAURANT1_ID, dish);
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Dish entity = responseEntity.getBody();
         assertTrue(entity.getId() > START_SEQ);
         dish.setId(entity.getId());
@@ -129,13 +140,20 @@ public class AdminRestControlTest {
 
     @Test
     public void dishUpdated() throws URISyntaxException {
-        Dish dish = new Dish(testData.DISH2_ID, "second name", 200, new Date());
+        Dish dish = new Dish(testData.DISH2_ID, "second name", 200, LocalDateTime.now());
         Dish entity = (Dish) updateEntity(DISH_URL, dish);
         assertThat(entity).isEqualTo(dish);
     }
 
     @Test
-    public void dishDelete() {
+    public void dishDelete() throws URISyntaxException {
+        Dish entity = (Dish) deleteEntity(DISH_URL, testData.DISH3);
+        List<Dish> dishes = dishService.getAll(testData.RESTAURANT2_ID);
+        List<Dish> expected = testData.sortedByDate(testData.DISH4, testData.DISH7, testData.DISH8);
+        logger.info(dishes);
+        logger.info(expected);
+        assertThat(dishes).isEqualTo(expected);
+        assertEquals(testData.DISH3, entity);
     }
 
     @Test
@@ -159,18 +177,19 @@ public class AdminRestControlTest {
                 .exchange(local + restUrl, HttpMethod.POST, new HttpEntity<>(entity, getHeaders()), entity.getClass());
     }
 
-    private AbstractNamedEntity updateEntity(String strUrl, AbstractNamedEntity entity) throws URISyntaxException {
-        int id = entity.getId();
+    private AbstractNamedEntity updateEntity(String strUrl, AbstractNamedEntity entity) {
         String url = local + strUrl + "/{id}";
         getAdminAuthor()
-                .put(url, entity, id);
-        return getAdminAuthor()
-                .getForObject(url, entity.getClass(), id);
+                .put(url, entity, entity.getId());
+        return getEntity(url, entity);
     }
 
-    private void deleteEntity(String url, int id) {
+    private AbstractNamedEntity deleteEntity(String url, AbstractNamedEntity entity) {
+        String localUrl = local + url + "/{id}";
+        AbstractNamedEntity namedEntity = getEntity(localUrl, entity);
         getAdminAuthor()
-                .delete(local + url + "/" + id);
+                .delete(localUrl, entity.getId());
+        return namedEntity;
     }
 
     private HttpHeaders getHeaders() {
@@ -181,5 +200,10 @@ public class AdminRestControlTest {
 
     private RestTemplate getAdminAuthor() {
         return restTemplate.withBasicAuth("admin@gmail.com", "password").getRestTemplate();
+    }
+
+    private AbstractNamedEntity getEntity(String url, AbstractNamedEntity entity) {
+        return getAdminAuthor()
+                .getForObject(url, entity.getClass(), entity.getId());
     }
 }

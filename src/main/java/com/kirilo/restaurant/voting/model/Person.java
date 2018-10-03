@@ -7,8 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -46,7 +46,7 @@ public abstract class Person extends AbstractNamedEntity{
         this.roles = roles;
     }
 
-    public Person(Integer id, String name, String email, String password, boolean enabled, Date registered, Set<Role> roles) {
+    public Person(Integer id, String name, String email, String password, boolean enabled, LocalDateTime registered, Set<Role> roles) {
         super(id, name, registered);
         this.email = email;
         this.password = password;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -79,7 +79,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getWithDishes(int id, Date date) {
+    public Restaurant getWithDishes(int id, LocalDateTime date) {
         return repository.getWithDishes(id, date);
     }
 

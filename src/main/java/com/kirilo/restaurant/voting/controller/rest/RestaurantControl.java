@@ -33,14 +33,6 @@ public class RestaurantControl {
         return restaurants;
     }
 
-    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/10004
-    @GetMapping("/{id}")
-    public Restaurant getRestaurant(@PathVariable int id) {
-        Restaurant restaurant = restaurantService.get(id);
-        logger.info("Returning restaurant: " + restaurant.toString());
-        return restaurant;
-    }
-
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes
     @GetMapping("/dishes")
     public List<Restaurant> getWithDishes() {

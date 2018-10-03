@@ -2,11 +2,11 @@ package com.kirilo.restaurant.voting.service;
 
 import com.kirilo.restaurant.voting.model.Dish;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DishService {
-    List<Dish> getWithRestaurantsByDate(Date dateToday);
+    List<Dish> getWithRestaurantsByDate(LocalDateTime dateToday);
 
     Dish create(Dish dish, int id);
 
@@ -17,4 +17,6 @@ public interface DishService {
     int delete(int id);
 
     Dish get(int id);
+
+    List<Dish> getAll(int restaurantId);
 }

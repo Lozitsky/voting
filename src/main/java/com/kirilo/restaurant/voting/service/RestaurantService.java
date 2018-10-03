@@ -4,7 +4,7 @@ import com.kirilo.restaurant.voting.model.Restaurant;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RestaurantService {
@@ -26,7 +26,7 @@ public interface RestaurantService {
 
     List<Restaurant> getWithDishes(String date);
 
-    Restaurant getWithDishes(int id, Date dateToday);
+    Restaurant getWithDishes(int id, LocalDateTime dateToday);
 
     List<Restaurant> getWithVotes(int id, HttpServletResponse response);
 

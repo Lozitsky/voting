@@ -10,7 +10,6 @@ import com.kirilo.restaurant.voting.util.VotingUtil;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,11 +55,21 @@ public class AdminControl {
         restaurantService.delete(id);
     }
 
+    //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/admin/restaurant/10004
+    @GetMapping("/restaurant/{id}")
+    public Restaurant getRestaurant(@PathVariable int id) {
+        Restaurant restaurant = restaurantService.get(id);
+        logger.info("Returning restaurant: " + restaurant.toString());
+        return restaurant;
+    }
+
     //    curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10008 --data '{"name":"Some Dish3 блюдо","price":350}'
     @PostMapping("/dish/{id}")
-    public ResponseEntity<Dish> dishCreated(@RequestBody Dish dish, @PathVariable int id) {
+    public Dish dishCreated(@RequestBody Dish dish, @PathVariable int id) {
+
         logger.info("Creating dish");
-        return valid.entityFromURI(dishService.create(dish, id));
+//        return valid.entityFromURI(dishService.create(dish, id));
+        return dishService.create(dish, id);
     }
 
     @GetMapping("/dish/{id}")
@@ -80,7 +89,7 @@ public class AdminControl {
     @DeleteMapping("/dish/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void dishDelete(@PathVariable int id) {
-        logger.info("Deleting restaurant " + id);
+        logger.info("Deleting dish " + id);
         dishService.delete(id);
     }
 

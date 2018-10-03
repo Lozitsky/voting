@@ -26,4 +26,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("UPDATE User u SET u.enabled=?1 WHERE u.id=?2")
     int setStatus(boolean enabled, int id);
+
+//    @Override
+//    @Transactional
+//    User save(User user);
 }

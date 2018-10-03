@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractEntity {
@@ -17,7 +17,7 @@ public abstract class AbstractNamedEntity extends AbstractEntity {
     protected AbstractNamedEntity() {
     }
 
-    protected AbstractNamedEntity(Integer id, String name, Date registered) {
+    protected AbstractNamedEntity(Integer id, String name, LocalDateTime registered) {
         super(id, registered);
         this.name = name;
     }
@@ -40,7 +40,6 @@ public abstract class AbstractNamedEntity extends AbstractEntity {
         return "AbstractNamedEntity{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
-                ", date=" + date +
                 '}';
     }
 }

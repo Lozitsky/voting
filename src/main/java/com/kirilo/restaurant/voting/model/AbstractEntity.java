@@ -1,15 +1,11 @@
 package com.kirilo.restaurant.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kirilo.restaurant.voting.web.json.DateHandler;
-import com.kirilo.restaurant.voting.web.json.DateSerializer;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 // http://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
@@ -23,12 +19,11 @@ public abstract class AbstractEntity implements Persistable<Integer> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     protected Integer id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss"    )
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "date", columnDefinition = "timestamp default now()")
     @NotNull
-    @JsonDeserialize(using = DateHandler.class)
-    @JsonSerialize(using = DateSerializer.class)
-    protected Date date = new Date();
+    private LocalDateTime date = LocalDateTime.now();
+//    private Date date = new Date();
 
     protected AbstractEntity() {
     }
@@ -37,7 +32,7 @@ public abstract class AbstractEntity implements Persistable<Integer> {
         this.id = id;
     }
 
-    public AbstractEntity(Integer id, Date date) {
+    public AbstractEntity(Integer id, LocalDateTime date) {
         this.id = id;
         this.date = date;
     }
@@ -50,11 +45,11 @@ public abstract class AbstractEntity implements Persistable<Integer> {
         this.id = id;
     }
 
-    public Date getDate() {
+    public @NotNull LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

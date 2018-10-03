@@ -45,11 +45,12 @@ public class Vote extends AbstractEntity {
                 '}';
     }*/
 
-    @Override
+/*    @Override
     public String toString() {
         return "Vote{" +
                 "numberOfVotes=" + numberOfVotes +
                 ", id=" + id +
+                ", date=" + date +
                 '}';
-    }
+    }*/
 }

@@ -75,16 +75,6 @@ public class SecuredRestaurantControllerRestTemplateIntegrationTest {
     }
 
     @Test
-    public void getRestaurant() {
-        int id = testData.RESTAURANT1_ID;
-        Restaurant restaurant = template
-                .withBasicAuth("admin@gmail.com", "password")
-                .getForObject(local + URL + "/{id}", Restaurant.class, id);
-        assertThat(restaurant).isEqualTo(testData.RESTAURANT1);
-        logger.info(restaurant);
-    }
-
-    @Test
     public void getWithDishes() {
         ParameterizedTypeReference<List<Restaurant>> paramType = new ParameterizedTypeReference<List<Restaurant>>() {};
         ResponseEntity<List<Restaurant>> list = template
