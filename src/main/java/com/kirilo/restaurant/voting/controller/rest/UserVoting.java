@@ -1,7 +1,6 @@
 package com.kirilo.restaurant.voting.controller.rest;
 
 import com.kirilo.restaurant.voting.model.Dish;
-import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
 import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.VotingService;
@@ -22,7 +21,6 @@ import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 public class UserVoting {
     private final Logger logger = Logger.getLogger(UserVoting.class);
     static final String REST = "/rest/user";
-//    private final ValidationDateTime dateTime;
     private final VotingService votingService;
     private final DishService dishService;
 
@@ -30,18 +28,13 @@ public class UserVoting {
     @Autowired
     public UserVoting(VotingService votingService, DishService dishService) {
         this.votingService = votingService;
-//        dateTime = new ValidationDateTime();
         this.dishService = dishService;
     }
 
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/voteFor/10007
     @RequestMapping("/voteFor/{id}")
     public Vote voteFor(@PathVariable int id) {
-        User user = getUser();
-        Vote vote = votingService.voteFor(id, user);
-        votingService.update(vote, user);
-
-        return vote;
+        return votingService.voteFor(id, getUser().getId());
     }
 
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/votes

@@ -86,7 +86,7 @@ public class SecuredRestaurantControllerRestTemplateIntegrationTest {
                 .containsAll(restaurants);
         assertThat((actual.get(2)).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH1, testData.DISH2));
         assertThat(actual.get(6).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH3, testData.DISH7, testData.DISH8, testData.DISH4));
-        assertThat(actual.get(4).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH6, testData.DISH5));
+        assertThat(actual.get(4).getDishes()).isEqualTo(testData.sortedByDate(testData.DISH5, testData.DISH6));
     }
 
     @Test

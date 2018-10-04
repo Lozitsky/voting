@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(int id) throws NotFoundException {
-        return null;
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("can't find user in database"));
     }
 
     @Override

@@ -26,7 +26,7 @@ public interface VotingRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT v FROM Vote v JOIN FETCH v.restaurant WHERE v.date = ?1 ORDER BY v.date DESC")
     List<Vote> getWithRestaurantsByDate(Date date);
 
-//    @Override
-//    @Transactional
-//    Vote save(Vote vote);
+    @Override
+    @Transactional
+    Vote save(Vote vote);
 }

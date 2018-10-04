@@ -2,16 +2,15 @@ package com.kirilo.restaurant.voting.service;
 
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.model.Vote;
+import com.kirilo.restaurant.voting.repository.DishRepository;
 import com.kirilo.restaurant.voting.repository.UserRepository;
 import com.kirilo.restaurant.voting.repository.VotingRepository;
 import com.kirilo.restaurant.voting.util.ValidationDateTime;
-import com.kirilo.restaurant.voting.util.ValidationUtil;
 import com.kirilo.restaurant.voting.util.VotingUtil;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,40 +24,31 @@ import static com.kirilo.restaurant.voting.security.SecurityUtil.getUser;
 @Service
 public class VotingServiceImpl implements VotingService {
     public final Logger logger = Logger.getLogger(VotingServiceImpl.class);
-    @Autowired
+
     private final VotingRepository repository;
 
     private final UserRepository userRepository;
 
+    private final DishRepository dishRepository;
+
     private final ValidationDateTime dateTime;
-    private final ValidationUtil util;
     private final VotingUtil valid;
 
     @Autowired
-    public VotingServiceImpl(VotingRepository repository, UserRepository userRepository) {
+    public VotingServiceImpl(VotingRepository repository, UserRepository userRepository, DishRepository dishRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
+        this.dishRepository = dishRepository;
         dateTime = new ValidationDateTime();
-        util = new ValidationUtil();
         valid = new VotingUtil();
     }
 
     //    https://www.baeldung.com/java-date-to-localdate-and-localdatetime
     @Override
     public Vote get(int id) {
-//        return repository.findByRestaurantIdAndDate(id, dateTime.getDateToday()).orElse(null);
         return repository.getByRestaurantIdAndDate(id, LocalDateTime.of(LocalDate.now(), LocalTime.MIN), LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
-//        return repository.getByRestaurantIdAndDate(id, dateTime.convertToDate(LocalDate.now()), dateTime.convertToDate(LocalDateTime.of(LocalDate.now(), LocalTime.MAX)))
-                .orElse(null);
-    }
+                .orElseThrow(() -> new NotFoundException("Can't find the restaurant"));
 
-    @Override
-    @Transactional
-    public void update(Vote vote, User user) {
-        Assert.notNull(vote, "restaurant must not be null");
-        repository.save(vote);
-//        userRepository.save(user);
-        util.checkNotFoundWithName(userRepository.save(user), user.getName());
     }
 
     @Override
@@ -74,7 +64,6 @@ public class VotingServiceImpl implements VotingService {
         valid.checkVoting(user, response);
 
         logger.info("User " + user.getName() + " can see result for today ");
-//        LocalDate dateToday = dateTime.getDateToday();
 
         LocalDate now = LocalDate.now();
         logger.info("Today is " + now);
@@ -82,7 +71,9 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public Vote voteFor(int id, User user) throws NotFoundException {
+    public Vote voteFor(int restaurantId, int userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("can't find user in database"));
 
         LocalDate lastDate = dateTime.getLastDate(user);
         LocalDate now = LocalDate.now();
@@ -94,28 +85,27 @@ public class VotingServiceImpl implements VotingService {
             if (now.equals(lastDate)) {
                 logger.info("it is before 11:00 we assume that user changed his mind");
                 Vote vote = get(user.getLastId());
-                if (vote != null)
-                    vote.setNumberOfVotes(vote.getNumberOfVotes() - 1);
+                vote.setNumberOfVotes(vote.getNumberOfVotes() - 1);
             }
 
-            logger.info("Voting for restaurant with id: " + id);
-            Vote vote = get(id);
-            if (vote == null) {
-                throw new NotFoundException("Empty menu today");
-            }
+            logger.info("Voting for restaurant with id: " + restaurantId);
+            Vote vote = get(restaurantId);
             vote.setNumberOfVotes(vote.getNumberOfVotes() + 1);
 
-            user.setLastId(id);
+            user.setLastId(restaurantId);
             user.setLastVoting(java.sql.Date.valueOf(now));
-//            user.setLastVoting(dateTime.convertToDate(now));
-//            user.setLastVoting(LocalDateTime.of(now, LocalTime.MIN));
-
-//            update(vote, user);
             //"Thank you for voting"
+            //**********************
+            Assert.notNull(dishRepository.getFirstByRestaurantIdAndDate(restaurantId, LocalDateTime.now()), "dish must not be null");
+            repository.save(vote);
+            userRepository.save(user);
+            //**********************
+
             return vote;
+        } else {
+            throw new NotFoundException("can't vote for the restaurant");
         }
         //  "You have already voted"
-        return null;
     }
 
 /*    @Override

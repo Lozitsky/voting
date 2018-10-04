@@ -31,6 +31,12 @@ public class User extends Person {
         super(id, name, email, password, enabled, registered, roles);
     }
 
+    public User(User user) {
+        super(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getDate(), user.getRoles());
+        this.lastVoting = user.getLastVoting();
+        this.lastId = user.getLastId();
+    }
+
     public Date getLastVoting() {
         return lastVoting;
     }

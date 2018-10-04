@@ -6,7 +6,6 @@ import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.service.DishService;
 import com.kirilo.restaurant.voting.service.RestaurantService;
 import com.kirilo.restaurant.voting.service.UserService;
-import com.kirilo.restaurant.voting.util.VotingUtil;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ public class AdminControl {
     private final RestaurantService restaurantService;
     private final DishService dishService;
     private final UserService userService;
-    private final VotingUtil valid;
     private final Logger logger = Logger.getLogger(AdminControl.class);
 
     @Autowired
@@ -29,7 +27,6 @@ public class AdminControl {
         this.restaurantService = restaurantService;
         this.dishService = dishService;
         this.userService = userService;
-        valid = new VotingUtil();
     }
 
     //    curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant --data '{"name":"Ресторан Golden Star","description":"text текст"}'

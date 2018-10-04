@@ -17,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 
 @Transactional
@@ -74,6 +77,18 @@ public class UserVotingTest {
     }
 
     @Test
+    public void voteWhenNoMenu() {
+        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(testData.RESTAURANT7_ID, "user@ukr.net");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void voteWhenNoRestaurant() {
+        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(10011, "user@ukr.net");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
     public void votesToday() {
     }
 
@@ -99,5 +114,10 @@ public class UserVotingTest {
     private Vote doVote(int id, String login) {
         return getUserAuthor(login)
                 .getForObject(local + VOTE_URL + "/voteFor/{id}", Vote.class, id);
+    }
+
+    private ResponseEntity<Vote> doVoteWithGetEntity(int id, String login) {
+        return  getUserAuthor(login)
+                .getForEntity(local + VOTE_URL + "/voteFor/{id}", Vote.class, id);
     }
 }
