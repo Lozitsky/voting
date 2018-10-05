@@ -62,4 +62,13 @@ public class User extends Person {
                 ", id=" + id +
                 '}';
     }*/
+
+    @Override
+    public String toString() {
+        return "User{" +
+                super.toString() +
+                "lastVoting=" + lastVoting +
+                ", lastId=" + lastId +
+                '}';
+    }
 }

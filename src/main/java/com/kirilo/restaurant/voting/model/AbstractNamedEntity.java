@@ -37,7 +37,7 @@ public abstract class AbstractNamedEntity extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "AbstractNamedEntity{" +
+        return "{" +
                 super.toString() +
                 "name='" + name + '\'' +
                 '}';

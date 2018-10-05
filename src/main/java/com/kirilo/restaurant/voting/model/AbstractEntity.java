@@ -74,7 +74,7 @@ public abstract class AbstractEntity implements Persistable<Integer> {
 
     @Override
     public String toString() {
-        return "AbstractEntity{" +
+        return "{" +
                 "date=" + date +
                 ", id=" + id +
                 '}';
