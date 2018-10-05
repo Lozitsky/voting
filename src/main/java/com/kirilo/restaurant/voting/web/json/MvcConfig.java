@@ -8,11 +8,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -27,6 +30,7 @@ class MvcConfig implements WebMvcConfigurer {
      * @link https://github.com/FasterXML/jackson-datatype-hibernate
      * @link https://github.com/FasterXML/jackson-docs/wiki/JacksonHowToCustomSerializers
      * @link https://stackoverflow.com/questions/47552835/the-type-webmvcconfigureradapter-is-deprecated/47553586
+     * @link https://www.javatips.net/api/org.springframework.http.converter.abstracthttpmessageconverter
      */
 
     /* Here we register the Hibernate4Module into an ObjectMapper, then set this custom-configured ObjectMapper
@@ -43,6 +47,11 @@ class MvcConfig implements WebMvcConfigurer {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(new MediaType("application", "json", Charset.forName("UTF-8")));
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+        supportedMediaTypes.add(MediaType.APPLICATION_FORM_URLENCODED);
+        messageConverter.setSupportedMediaTypes(supportedMediaTypes);
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
 

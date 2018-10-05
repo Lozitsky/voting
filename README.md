@@ -12,8 +12,10 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 <br>
 <br>
 <h5>Admin</h5>
+
 <ul>
-<li>can registration( admin@gmail.com:password )</li>
+<li>can registration( For example: 
+                     <a href="https://voting-rest.herokuapp.com/rest/restaurants">get all restaurants</a>  admin@gmail.com : password )</li>
 <li>can add restaurants(name and description)</li>
 <li>can add restaurants dishes(name and price)</li>
 <li>can watch the voting history(by restaurant Id, by date)</li>
@@ -26,8 +28,10 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 <br>
 <h5>User</h5>
 <ul>
-<li>can registration( user2@yandex.ru:password )</li>
-<li>can vote</li>
+<li>can registration( For example: 
+                     <a href="https://voting-rest.herokuapp.com/rest/user/votes">get result or list menu with restaurants</a>  user2@yandex.ru : password )</li>
+<li>can vote( For example: 
+                     <a href="https://voting-rest.herokuapp.com/rest/user/voteFor/10006">vote for restaurant with id 10006</a>)</li>
 <li>can watch voting after the vote (if he has not voted, he will redirect to the voting list)</li>
 <li>can change his voice by 11 o’clock</li>
 <li>can vote between 00:00 and 23:59</li>
