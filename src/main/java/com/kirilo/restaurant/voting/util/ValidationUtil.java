@@ -4,6 +4,7 @@ import com.kirilo.restaurant.voting.model.AbstractEntity;
 import com.kirilo.restaurant.voting.model.Role;
 import com.kirilo.restaurant.voting.model.User;
 import com.kirilo.restaurant.voting.util.exception.NotFoundException;
+import com.kirilo.restaurant.voting.util.exception.ConflictException;
 
 public class ValidationUtil {
 
@@ -22,7 +23,7 @@ public class ValidationUtil {
 
     public void checkNotFound(boolean found, String msg) {
         if (!found) {
-            throw new NotFoundException("Not found entity with " + msg);
+            throw new ConflictException("Not found entity with " + msg);
         }
     }
 
@@ -31,7 +32,7 @@ public class ValidationUtil {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.getId() != id) {
-            throw new IllegalArgumentException(entity + " must be with id=" + id);
+            throw new ConflictException(entity + " must be with id=" + id);
         }
     }
 

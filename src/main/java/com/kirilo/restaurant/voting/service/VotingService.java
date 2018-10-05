@@ -10,11 +10,13 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface VotingService {
 
+    Vote getByRestaurantId(int restaurantId);
+
     Vote get(int id);
 
     List<Vote> getWithRestaurantsByDate(LocalDateTime date);
 
-    List<Vote> getWithRestaurantsToday(HttpServletResponse response);
+    List<Vote> getWithRestaurantsToday(HttpServletResponse response, int id);
 
     @Transactional
     Vote voteFor(int restaurantId, int userId);

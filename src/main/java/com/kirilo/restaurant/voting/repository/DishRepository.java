@@ -8,14 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Transactional(readOnly = true)
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.date = ?1 ORDER BY d.date DESC")
-    List<Dish> getDateToday(Date date);
+    List<Dish> getMenuToday(LocalDateTime date);
 
     Dish getFirstByRestaurantIdAndDate(int id, LocalDateTime localDateTime);
 

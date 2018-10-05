@@ -36,21 +36,12 @@ public class Vote extends AbstractEntity {
         this.restaurant = restaurant;
     }
 
-/*    @Override
+    @Override
     public String toString() {
         return "Vote{" +
+                super.toString() +
                 "numberOfVotes=" + numberOfVotes +
                 ", restaurant=" + restaurant +
-                ", id=" + id +
                 '}';
-    }*/
-
-/*    @Override
-    public String toString() {
-        return "Vote{" +
-                "numberOfVotes=" + numberOfVotes +
-                ", id=" + id +
-                ", date=" + date +
-                '}';
-    }*/
+    }
 }

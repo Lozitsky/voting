@@ -38,8 +38,8 @@ public abstract class AbstractNamedEntity extends AbstractEntity {
     @Override
     public String toString() {
         return "AbstractNamedEntity{" +
+                super.toString() +
                 "name='" + name + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

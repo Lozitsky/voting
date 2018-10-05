@@ -74,5 +74,13 @@ public class Restaurant extends AbstractNamedEntity {
                 ", id=" + id +
                 '}';
     }*/
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                super.toString() +
+                "description='" + description + '\'' +
+                '}';
+    }
 }
 

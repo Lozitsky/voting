@@ -16,15 +16,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -72,29 +75,60 @@ public class UserVotingTest {
         assertThat(voted2.getNumberOfVotes()).isEqualTo(2);
         Vote voted3 = doVote(testData.RESTAURANT3_ID, "user3@mail.ru");
         assertThat(voted3.getNumberOfVotes()).isEqualTo(3);
-        Vote vote = votingService.get(testData.RESTAURANT3_ID);
+        Vote vote = votingService.getByRestaurantId(testData.RESTAURANT3_ID);
         assertThat(vote.getNumberOfVotes()).isEqualTo(voted3.getNumberOfVotes());
     }
 
     @Test
     public void voteWhenNoMenu() {
-        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(testData.RESTAURANT7_ID, "user@ukr.net");
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(testData.RESTAURANT7_ID, getUserAuthor("user@ukr.net"));
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
     @Test
     public void voteWhenNoRestaurant() {
-        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(10011, "user@ukr.net");
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(testData.RESTAURANT7_ID + 1, getUserAuthor("user@ukr.net"));
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
-    public void votesToday() {
+    public void votingAdmin() {
+        ResponseEntity<Vote> responseEntity = doVoteWithGetEntity(testData.RESTAURANT3_ID, getAdminAuthor());
+        assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
+    }
+
+    public void badLink() {
+        ResponseEntity<Vote> responseEntity = getUserAuthor("user@ukr.net")
+                .getForEntity(local + "/voteFor/{id}", Vote.class, testData.RESTAURANT3_ID);
+        assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void votesTodayRedirectWhenNoVoted() {
+        ResponseEntity<List> responseEntity = getEntities("/votes", "user@ukr.net");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        List expected = getUserAuthor("user@ukr.net")
+                .getForObject(local + VOTE_URL + "/dishes/forVoting", List.class);
+        assertEquals(expected, responseEntity.getBody());
+    }
+
+    @Test
+    public void votesTodayWhenVoted() {
+        doVote(testData.RESTAURANT3_ID, "user@ukr.net");
+        List<Vote> expectedList = votingService.getWithRestaurantsByDate(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
+
+        ResponseEntity<List<Vote>> responseEntity = getParametrizedTypeEntities("/votes", "user@ukr.net");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        logger.info(responseEntity.getBody());
+        List<Vote> actual = responseEntity.getBody();
+        assertThat(actual).isEqualTo(expectedList);
     }
 
     @Test
     public void dishesWithRestaurants() {
     }
+
 
     private RestTemplate getAdminAuthor() {
         return restTemplate.withBasicAuth("admin@gmail.com", "password").getRestTemplate();
@@ -116,8 +150,19 @@ public class UserVotingTest {
                 .getForObject(local + VOTE_URL + "/voteFor/{id}", Vote.class, id);
     }
 
-    private ResponseEntity<Vote> doVoteWithGetEntity(int id, String login) {
-        return  getUserAuthor(login)
+    private ResponseEntity<Vote> doVoteWithGetEntity(int id, RestTemplate authorization) {
+        return authorization
                 .getForEntity(local + VOTE_URL + "/voteFor/{id}", Vote.class, id);
+    }
+
+    private ResponseEntity<List> getEntities(String url, String login) {
+        return getUserAuthor(login)
+                .getForEntity(local + VOTE_URL + url, List.class);
+    }
+
+    private ResponseEntity<List<Vote>> getParametrizedTypeEntities(String url, String login) {
+        ParameterizedTypeReference<List<Vote>> paramType = new ParameterizedTypeReference<List<Vote>>() {};
+        return getUserAuthor(login)
+                .exchange(local + VOTE_URL + url, HttpMethod.GET, null, paramType);
     }
 }

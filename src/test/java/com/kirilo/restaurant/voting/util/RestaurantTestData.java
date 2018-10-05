@@ -3,6 +3,7 @@ package com.kirilo.restaurant.voting.util;
 import com.kirilo.restaurant.voting.model.AbstractEntity;
 import com.kirilo.restaurant.voting.model.Dish;
 import com.kirilo.restaurant.voting.model.Restaurant;
+import com.kirilo.restaurant.voting.model.Vote;
 
 import java.time.Month;
 import java.util.Arrays;
@@ -50,6 +51,13 @@ public class RestaurantTestData {
     public final Dish DISH7 = new Dish(DISH7_ID, "Super ланч", 510, of(2018, Month.SEPTEMBER,28,00,00,00));
     public final Dish DISH8 = new Dish(DISH8_ID, "Super ужин", 1500, of(2018, Month.SEPTEMBER,28,00,00,00));
 
+    public final int VOTE1_ID = START_SEQ + 11;
+    public final int VOTE2_ID = START_SEQ + 12;
+    public final int VOTE3_ID = START_SEQ + 13;
+    public final int VOTE4_ID = START_SEQ + 14;
+    public final int VOTE5_ID = START_SEQ + 15;
+    public final int VOTE6_ID = START_SEQ + 16;
+    public final int VOTE7_ID = START_SEQ + 17;
 
     public List<Dish> sortedByDate(Dish... dishes) {
         return (List<Dish>) sortedByDate(Arrays.asList(dishes));
@@ -57,6 +65,10 @@ public class RestaurantTestData {
 
     public List<Restaurant> sortedByDate(Restaurant... restaurants) {
         return (List<Restaurant>) sortedByDate(Arrays.asList(restaurants));
+    }
+
+    public List<Vote> sortedByDate(Vote... votes) {
+        return (List<Vote>) sortedByDate(Arrays.asList(votes));
     }
 
     public List<? extends AbstractEntity> sortedByDate(List<? extends AbstractEntity> entities) {

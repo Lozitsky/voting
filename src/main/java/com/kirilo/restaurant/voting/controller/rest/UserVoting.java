@@ -42,8 +42,7 @@ public class UserVoting {
     public List<Vote> votesToday(HttpServletResponse response) {
         logger.info("Get result for voted today");
 
-        return votingService.getWithRestaurantsToday(response);
-
+        return votingService.getWithRestaurantsToday(response, getUser().getId());
     }
 
     //    curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/dishes/forVoting

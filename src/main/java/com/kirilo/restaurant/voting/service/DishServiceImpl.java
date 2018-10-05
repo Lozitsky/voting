@@ -40,7 +40,8 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<Dish> getWithRestaurantsByDate(LocalDateTime dateToday) {
-        return repository.getDateToday(dateTime.convertToDate(dateToday));
+//        return repository.getDateToday(dateToday);
+        return util.checkNotFound(repository.getMenuToday(dateToday), "list dishes, must not be null");
     }
 
     @Override

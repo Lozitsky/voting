@@ -51,8 +51,6 @@ public class VotingUtil {
 
     public ResponseEntity entityFromURI(AbstractNamedEntity entity) {
         URI uri = ServletUriComponentsBuilder
-//                .fromCurrentContextPath()
-//                .path(REST_URL + "/restaurant/{id}")
                 .fromCurrentRequestUri()
                 .path("{/id}")
                 .buildAndExpand(entity.getId()).toUri();
@@ -60,11 +58,12 @@ public class VotingUtil {
     }
 
     //https://stackoverflow.com/questions/29085295/spring-mvc-restcontroller-and-redirect
-    public void checkVoting(User user, HttpServletResponse response){
+    public void checkVoting(User user, HttpServletResponse response) {
         if (!alreadyVoted(user)) {
             logger.info("User " + user.getName() + " not voted yet");
             try {
                 response.sendRedirect("/rest/user/dishes/forVoting");
+//                response.setStatus(302);
             } catch (IOException e) {
                 throw new NotFoundException("Bad response from " + e.getLocalizedMessage());
             }
