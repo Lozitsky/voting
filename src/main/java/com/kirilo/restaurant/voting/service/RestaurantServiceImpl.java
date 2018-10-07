@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -70,7 +72,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Restaurant> getWithDishes(String stringDate) {
-        return repository.getWithDishes(dateTime.getDate(stringDate, "00:00:00"), dateTime.getDate(stringDate, "23:59:59"));
+        LocalDate date = LocalDate.parse(stringDate);
+        return repository.getWithDishes(LocalDateTime.of(date, LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
     }
 
     @Override
@@ -85,19 +88,17 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Restaurant> getWithVotes(HttpServletResponse response) {
-//            dateTime.checkVoting(getUser(), response);
         return repository.getWithVotes();
     }
 
     @Override
     public List<Restaurant> getWithVotes(String stringDate, HttpServletResponse response) {
-//            dateTime.checkVoting(getUser(), response);
-        return repository.getWithVotes(dateTime.getDate(stringDate, "00:00:00"), dateTime.getDate(stringDate, "23:59:59"));
+        LocalDate date = LocalDate.parse(stringDate);
+        return repository.getWithVotes(LocalDateTime.of(date, LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
     }
 
     @Override
     public List<Restaurant> getWithVotes(int id, HttpServletResponse response) {
-//            dateTime.checkVoting(getUser(), response);
         return util.checkNotFoundWithId(repository.getWithVotes(id), id);
     }
 }

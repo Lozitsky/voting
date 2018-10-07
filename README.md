@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Lozitsky/voting.svg?branch=master)](https://travis-ci.org/Lozitsky/voting)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7874e7f975c4b82ad5f3aa5a605d823)](https://www.codacy.com/app/Lozitsky/voting?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lozitsky/voting&amp;utm_campaign=Badge_Grade)
 
-<h1># private voting system</h1>
+<h1> #private voting system </h1>
 Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 <br>
 <br>
@@ -56,42 +56,46 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 </ul>
 <br>
 <h4>Curl commands</h4>
+For testing on localhost. If you want testing on cloud service Heroku you need change "http://localhost:8080" to "https://voting-rest.herokuapp.com"
+<br>
+<br>
+Notes. After 30 minutes of inactivity, Heroku needs some time (~ 2 minutes) to start the system.
 <ul>
 <li>
-<h6>Get list all restaurants:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants
+<h6>Get list all thr restaurants:</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants
 </li>
 <li>
 <h6>Get restaurant by Id:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurant/10004
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10004
 </li>
 <li>
 <h6>Get restaurants with dishes:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes
 </li>
 <li>
 <h6>Get restaurant with dishes by Id:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurant/dishes/10006
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes/10006
 </li>
 <li>
 <h6>Get restaurant with dishes by date:</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/restaurants/dishes/date/2018-09-19
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes/date/2017-11-11
 </li>
 <li>
-<h6>Get all restaurants with menu</h6>
+<h6>Get all the restaurants with voices</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes
 </li>
 <li>
-<h6>Get restaurant with votes by Id</h6>
+<h6>Get restaurant with voices by Id</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/10005
 </li>
 <li>
-<h6>Get restaurant with votes by date</h6>
-curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/date/2018-09-24
+<h6>Get restaurant with voices by date</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/date/2018-01-11
 </li>
 <li>
-<h6>Get munu(dishes) with restaurants for voting(only for User):</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/dishes/forVoting
+<h6>Get munu(dishes) with the restaurants for voting(only for User):</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic dXNlckB1a3IubmV0OnBhc3N3b3Jk' -i http://localhost:8080/rest/user/dishes/forVoting
 </li>
 <li>
 <h6>Create a dish by restaurant id(only for Admin):</h6>
@@ -103,7 +107,7 @@ curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5
 </li>
 <li>
 <h6>Delete dish by id(only for Admin)</h6>
-curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10022
+curl -X DELETE -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10021
 </li>
 <li>
 <h6>Create restaurant(only for Admin):</h6>
@@ -115,36 +119,37 @@ curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5
 </li>
 <li>
 <h6>Delete Restaurant(only Admin):</h6>
-curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10008
+curl -X DELETE -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10008
 </li>
 <li>
-<h6>Get user by id</h6>
-curl -X GET -i http://localhost:8080/rest/admin/user/10002
+<h6>Get user by id(only for Admin)</h6>
+curl -X GET -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/10002
 </li>
 <li>
-<h6>Get all user by id</h6>
-curl -X GET -i http://localhost:8080/rest/admin/users
+<h6>Get all users(only for Admin)</h6>
+curl -X GET -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/users
 </li>
 <li>
-<h6>Set the user field with the name enabled to true by id</h6>
-curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/on/10003
+<h6>Set the user field with the name enabled to true by id(only for Admin)</h6>
+curl -X PUT -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/on/10003
 </li>
 <li>
-<h6>Set the user field with the name enabled to false by id</h6>
-curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/off/10003
+<h6>Set the user field with the name enabled to false by id(only for Admin)</h6>
+curl -X PUT -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/user/off/10003
 </li>
 <li>
-<h6>Get results voting(only for User)</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/votes
+<h6>Get results voting or redirect when you don't vote(only for User)</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic dXNlckB1a3IubmV0OnBhc3N3b3Jk' -i http://localhost:8080/rest/user/votes
 </li>
 <li>
-<h6>Vote for a restaurant by restaurant Id(only for User)</h6>
-curl -X GET -H 'Authorization: Basic dXNlckB5YW5kZXgucnU6cGFzc3dvcmQ=' -i http://localhost:8080/rest/user/voteFor/10007
+<h6>Vote for a restaurant by restaurant Id(only for User and only one time if more than 11:00)</h6>
+curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic dXNlckB1a3IubmV0OnBhc3N3b3Jk' -i http://localhost:8080/rest/user/voteFor/10006
 <h6></h6>
 </li>
 </ul>
 
 For testing on Firefox can try <a href="http://restclient.net/"> RESTClient</a>
+<br>
 <br>
 <footer>10.2018
   <p>&copy; Created by <a href="https://github.com/Lozitsky" target="_blank">Kirilo Lozitsky</a></p>
