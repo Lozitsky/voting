@@ -10,6 +10,20 @@ Maven Spring Boot Security JPA(Hibernate) REST(Jackson) Tests(JUnit4)
 <a href="https://voting-rest.herokuapp.com">Demo project "Voting for restaurants"</a>
 <br>
 <br>
+<p>
+    How does it work? 
+</p>
+<p>
+The administrator creates a menu every day. In addition, when he will create the first dish, the entity of the voting will be automatically created.
+Voting possible only if dishes present today. If restaurant don't containes any dish for todays date that voting impossible. 
+Admin also can update or delete menu. If admin will update some old dish that the entity of the voting for this restaurant will be automatically created. 
+Every restaurant have entity of vote for avery day when it contains menu. 
+<br>
+Users can vote every day for the different restaurants which contains menu. 
+If user wants vote again for another restaurant that he can do it until to 11:00 am. 
+After he can do it in another day.
+User can vote from 00:01 to 24:00
+</p>
 <br>
 <h5>Admin</h5>
 
@@ -62,35 +76,35 @@ For testing on localhost. If you want testing on cloud service Heroku you need c
 Notes. After 30 minutes of inactivity, Heroku needs some time (~ 2 minutes) to start the system.
 <ul>
 <li>
-<h6>Get list all thr restaurants:</h6>
+<h6>Get list all the restaurants(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants
 </li>
 <li>
-<h6>Get restaurant by Id:</h6>
+<h6>Get restaurant by Id(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/restaurant/10004
 </li>
 <li>
-<h6>Get restaurants with dishes:</h6>
+<h6>Get restaurants with dishes(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes
 </li>
 <li>
-<h6>Get restaurant with dishes by Id:</h6>
+<h6>Get restaurant with dishes by Id(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes/10006
 </li>
 <li>
-<h6>Get restaurant with dishes by date:</h6>
+<h6>Get restaurant with dishes by date(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/dishes/date/2017-11-11
 </li>
 <li>
-<h6>Get all the restaurants with voices</h6>
+<h6>Get all the restaurants with voices(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes
 </li>
 <li>
-<h6>Get restaurant with voices by Id</h6>
+<h6>Get restaurant with voices by Id(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/10005
 </li>
 <li>
-<h6>Get restaurant with voices by date</h6>
+<h6>Get restaurant with voices by date(only for Admin):</h6>
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/restaurants/votes/date/2018-01-11
 </li>
 <li>
@@ -98,11 +112,11 @@ curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5
 curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic dXNlckB1a3IubmV0OnBhc3N3b3Jk' -i http://localhost:8080/rest/user/dishes/forVoting
 </li>
 <li>
-<h6>Create a dish by restaurant id(only for Admin):</h6>
+<h6>Create dish by restaurant id(only for Admin):</h6>
 curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10008 --data '{"name":"Some Dish3 блюдо","price":350}'
 </li>
 <li>
-<h6>Update the dish by id(only for Admin):</h6>
+<h6>Update dish by id(only for Admin):</h6>
 curl -X PUT -H 'Content-Type: application/json' -H 'Authorization: Basic YWRtaW5AZ21haWwuY29tOnBhc3N3b3Jk' -i http://localhost:8080/rest/admin/dish/10022 --data '{"name":"New Dish блюдо","price":453}'
 </li>
 <li>
@@ -147,8 +161,9 @@ curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic dXNlckB
 <h6></h6>
 </li>
 </ul>
-
+<br>
 For testing on Firefox can try <a href="http://restclient.net/"> RESTClient</a>
+<br>
 <br>
 <br>
 <footer>10.2018
